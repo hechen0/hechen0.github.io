@@ -1,41 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>何晨的随笔</title>
-    <link>http://hechen0.com/</link>
-    <description>Recent content on 何晨的随笔</description>
+    <title></title>
+    <link>/</link>
+    <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Mon, 26 Feb 2018 21:43:14 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 05 Apr 2018 22:25:25 +0800</lastBuildDate>
     
-	<atom:link href="http://hechen0.com/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Helloworld</title>
-      <link>http://hechen0.com/posts/helloworld/</link>
-      <pubDate>Mon, 26 Feb 2018 21:43:14 +0800</pubDate>
-      
-      <guid>http://hechen0.com/posts/helloworld/</guid>
-      <description>Hello World</description>
-    </item>
     
     <item>
-      <title></title>
-      <link>http://hechen0.com/posts/welcome-file/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <title>区块链</title>
+      <link>/posts/%E5%8C%BA%E5%9D%97%E9%93%BE/</link>
+      <pubDate>Thu, 05 Apr 2018 22:25:25 +0800</pubDate>
       
-      <guid>http://hechen0.com/posts/welcome-file/</guid>
-      <description>Welcome to StackEdit! Hi! I&amp;rsquo;m your first Markdown file in StackEdit. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. If you have finished with me, you can just create new files by opening the file explorer on the left corner of the navigation bar.
-Files StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible offline!</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>http://hechen0.com/posts/%E5%8C%BA%E5%9D%97%E9%93%BE/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://hechen0.com/posts/%E5%8C%BA%E5%9D%97%E9%93%BE/</guid>
+      <guid>/posts/%E5%8C%BA%E5%9D%97%E9%93%BE/</guid>
       <description> 背景 周会部门大boss分享了他对区块链的一些看法，觉得非常有意思，所以大概整理一下，希望能达到两个目标，一个是加深自己对区块链技术的进一步理解，第二就是能整理出boss的逻辑
 从问题出发 其实问题很简单，区块链要解决什么问题？ 对于这个问题，相信大家各有各的看法，比如 * 解决中心节点作弊问题 * 货币超发
 然而boss的答案却比较让我意外，从最原始的论文出发
@@ -43,11 +23,20 @@ Files StackEdit stores your files in your browser, which means all your files ar
     </item>
     
     <item>
+      <title>Helloworld</title>
+      <link>/posts/helloworld/</link>
+      <pubDate>Mon, 26 Feb 2018 21:43:14 +0800</pubDate>
+      
+      <guid>/posts/helloworld/</guid>
+      <description>Hello World</description>
+    </item>
+    
+    <item>
       <title></title>
-      <link>http://hechen0.com/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98/</link>
+      <link>/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://hechen0.com/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98/</guid>
+      <guid>/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98/</guid>
       <description>dc
  Written with StackEdit.  </description>
     </item>
