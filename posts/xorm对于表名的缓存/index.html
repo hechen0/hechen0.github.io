@@ -11,10 +11,10 @@
 
     <base href="http://hechen0.com">
     <title>
-  Categories · 
+  xorm对于表名的缓存 · 
 </title>
 
-    <link rel="canonical" href="http://hechen0.com/categories/">
+    <link rel="canonical" href="http://hechen0.com/posts/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98/">
 
     <link rel="stylesheet" href="https://cdn.bootcss.com/normalize/8.0.0/normalize.css">
     <link rel="stylesheet" href="http://hechen0.com/css/style.min.css">
@@ -22,9 +22,6 @@
     <link rel="icon" type="image/png" href="http://hechen0.com/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="http://hechen0.com/images/favicon-16x16.png" sizes="16x16">
 
-    
-      <link href="http://hechen0.com/categories/index.xml" rel="alternate" type="application/rss+xml" title="" />
-      <link href="http://hechen0.com/categories/index.xml" rel="feed" type="application/rss+xml" title="" />
     
 
     <meta name="generator" content="Hugo 0.36.1" />
@@ -56,17 +53,26 @@
 
       <div class="content">
         
-  <section class="container list">
-  <ul>
-    
-  </ul>
-  
+  <section class="container post">
+  <article>
+    <header>
+      <h1 class="title">xorm对于表名的缓存</h1>
+      <h2 class="date">2018-03-28</h2>
+    </header>
 
+    <p>最近碰到一个坑</p>
 
+<p>golang中的orm库: xorm</p>
 
+<p>如果不显示传入表名的话，xorm库可以根据你传入的struct主动调用定义的Tablename()方法去推断表名的。</p>
 
+<p>但是这个表名是有缓存的，缓存的结构是map[reflect.Type]string，如果能读到缓存，不会调用Tablename()方法。</p>
 
+<p>最近碰到的坑就是我们在业务层做了分表，导致不能依赖这种隐式推出表名的方法。</p>
 
+<p>对于分表而言，传入的struct是相同的，所以reflect.Type也是相同的，所以只会在缓存不存在的时候调用Tablename()方法。</p>
+
+  </article>
 </section>
 
 
