@@ -51,14 +51,5 @@ golang中的orm库: xorm
       <description>Hello World</description>
     </item>
     
-    <item>
-      <title></title>
-      <link>http://hechen0.com/posts/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98%E9%80%BB%E8%BE%91/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>http://hechen0.com/posts/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98%E9%80%BB%E8%BE%91/</guid>
-      <description>xorm对于 </description>
-    </item>
-    
   </channel>
 </rss>
