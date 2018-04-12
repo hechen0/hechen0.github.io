@@ -5,10 +5,28 @@
     <link>http://hechen0.com/posts/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 28 Mar 2018 19:30:42 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 12 Apr 2018 20:47:04 +0800</lastBuildDate>
     
 	<atom:link href="http://hechen0.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang中的 struct tag</title>
+      <link>http://hechen0.com/posts/struct-tag-golang/</link>
+      <pubDate>Thu, 12 Apr 2018 20:47:04 +0800</pubDate>
+      
+      <guid>http://hechen0.com/posts/struct-tag-golang/</guid>
+      <description>struct tag简介 在Go语言中我们通常使用struct来的表示复杂的数据结构，比如二维平面上的一个点，可以用下面的struct表示
+type Point struct { X int64 Y int64 } struct提供的功能不仅限于此，下面介绍下struct中的tag。
+我们可以在struct中的每一个field后面添加一段额外的注释或者说明，来引导struct的encoding到某种格式中，这部分额外的注释说明，我们称之为struct中的field tag，比如:
+type Person struct { FirstName string `json:&amp;#34;first_name&amp;#34;` LastName string `json:&amp;#34;last_name&amp;#34;` MiddleName string `json:&amp;#34;middle_name,omitempty&amp;#34;` } 这里我们定义了一个名为Person的struct，使用tag来指定encoding到json后，各个field在json中的key名称，在最后一个field tag中，我们额外添加了额外的omitempty选项，指示在encoding成json时，如果MiddleName==&amp;ldquo;&amp;ldquo;，那么encoding成json的时候忽略它。如:
+p = Person{FirstName: &amp;#34;chen&amp;#34;, LastName:&amp;#34;he&amp;#34;} 对应的encoding后的json就是
+{ &amp;#34;first_name&amp;#34;:&amp;#34;chen&amp;#34;, &amp;#34;last_name&amp;#34;:&amp;#34;he&amp;#34; } 关于更多格式的tag选项见本文末尾
+struct tag的解析 在Go语言中field tag是用 reflect.StructTag 这个结构表示的，reflect.StructTag对应于一个string
+package reflect type StructTag string 这个string的按照惯例是由多个 key:&amp;ldquo;value&amp;rdquo; 连接而成，每一组 key:&amp;ldquo;value&amp;rdquo;都代表一种encoding格式，例如:
+Name string `json:&amp;#34;name&amp;#34; xml:&amp;#34;name&amp;#34;` 但是我们也可以完全不用遵守这种惯例，自定义一套解释规则。
+我们可以使用Go提供的 reflect 包来读取tag中的信息，首先我们需要先获取struct的Type，接着使用 Type.Field 、Type.FieldByIndex 或者 Type.FieldByName 来获取struct中的某一个field，获取到的field中就包含了StructTag信息。举例:</description>
+    </item>
     
     <item>
       <title>xorm对于表名的缓存</title>
@@ -31,6 +49,15 @@ golang中的orm库: xorm
       
       <guid>http://hechen0.com/posts/helloworld/</guid>
       <description>Hello World</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://hechen0.com/posts/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98%E9%80%BB%E8%BE%91/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://hechen0.com/posts/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98%E9%80%BB%E8%BE%91/</guid>
+      <description>xorm对于 </description>
     </item>
     
   </channel>

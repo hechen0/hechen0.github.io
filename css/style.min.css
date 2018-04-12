@@ -42,7 +42,6 @@ h4,
 h5,
 h6 {
   color: #000;
-  text-transform: uppercase;
   letter-spacing: 0.0625em;
   margin: 3.2rem 0 1.6rem 0;
 }
@@ -105,11 +104,6 @@ pre {
   padding: 1.6rem;
   overflow-x: auto;
 }
-code {
-  background-color: #000;
-  color: #fefefe;
-  padding: 0.4rem 0.8rem 0.4rem 0.8rem;
-}
 blockquote {
   border-left: 2px solid #dcdcdc;
   padding-left: 1.6rem;
@@ -138,7 +132,6 @@ img {
 .navigation a {
   display: inline;
   font-size: 1.6rem;
-  text-transform: uppercase;
   line-height: 6.0rem;
   letter-spacing: 0.1rem;
 }
@@ -210,9 +203,6 @@ img {
     text-align: left;
   }
 }
-.list ul li a {
-  text-transform: uppercase;
-}
 .pagination {
   margin-top: 6.0rem;
   text-align: center;
@@ -264,7 +254,6 @@ img {
   position: relative;
 }
 .centered .about ul li a {
-  text-transform: uppercase;
   margin-left: 1.0rem;
   margin-right: 1.0rem;
   font-size: 1.6rem;
