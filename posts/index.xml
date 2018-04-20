@@ -5,10 +5,32 @@
     <link>http://hechen0.com/posts/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 12 Apr 2018 20:47:04 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 15 Apr 2018 10:19:05 +0800</lastBuildDate>
     
 	<atom:link href="http://hechen0.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Redis Pagination</title>
+      <link>http://hechen0.com/posts/redis-pagination/</link>
+      <pubDate>Sun, 15 Apr 2018 10:19:05 +0800</pubDate>
+      
+      <guid>http://hechen0.com/posts/redis-pagination/</guid>
+      <description>问题 分页是web应用中非常常见的需求，分页结果来自数据库查询，如何对这个分页结果使用Redis进行缓存呢？
+下面我说说常见的几种方案，并简单说说各自优劣。
+方案一 最简单的方式是按照sql作为缓存key(如将语句 &amp;ldquo;select * from comments limit 10 offset 0&amp;rdquo; md5)，结果作为value，如果同样的sql查询发生了，我们就可以命中缓存
+pro:
+ 实现简单  con:
+ 缓存的数据极有可能存在冗余，如条件&amp;rdquo;limit 10 offset 0&amp;rdquo;和&amp;rdquo;limit 10 offset 5&amp;rdquo;，重复的数据存储在不同的redis key中 只要查询的sql变化，就不会命中缓存 缓存一致性很难保证，如果更新了数据或者添加了新的记录，有的缓存会失效，但很难直接知道哪个key失效了(如总共100条记录，更新了第50条记录，难以知道哪次sql查询缓存了第50条记录)，最简单的做法就是将所有的满足pattern的key清空，比如上述的key可以加上前缀 sql_cache:6f7cb75b5cfe12ca1f51647b0f440251 使用 keys sql_cache:* 找出所有的key，然后清空。  在分页这种场景下，使用最常用的缓存方式有很多问题，所以还是不考虑这种方式。
+方案二 redis的list配合hash也可以满足分页需求，将一类记录(如一篇博文下的所有评论id)按照需要的顺序PUSH到一个key下(如blog:2)，将评论的内容放到hash中，使用LRANGE blog:2:comments 0 10，可以做到对查询直接进行分页，使用HMGET获取评论的具体内容
+pro:
+ 缓存的数据不存在冗余 支持元素更新，可以hset来更新某一个元素  con:
+ 只适用于分页顺序不会发生变化的，一旦需要更改元素之间的顺序，需要重新生成整个list 因为只有一个key，所以在并发写的情况下，LIST中的顺序和数据库中的顺序可能不一样，不太适合频繁写的场景  方案三 redis的zset配合hash是第三种方案。排序权重就是zset中的score值，比如可以用时间戳作为元素的score，分页使用ZRANGEBYSCORE命令，配合上zrangebyscore支持的limit offset，取具体的数据还是使用hash。
+pro: 前两条和方案二的相同，外加解决了方案二的两个缺陷。
+ 支持对元素顺序的更改，如果是按照更新时间戳排序，可以使用zadd改变某个元素的score值 即使在并发写的情况，由于元素的顺序只和score值有关，所以并不会出现顺序不一致的情况  方案四 set/list、hash配合sort命令，redis提供的sort命令可以直接对hash的属性进行排序 sort命令本身也支持limit offset参数。
+方案五 看到网上有人说可以使用redis的scan(增量遍历)来做分页，这个就不太合适了。
+redis的scan redis的scan是一种增量遍历(incrementally iterate)，什么叫增量遍历呢?</description>
+    </item>
     
     <item>
       <title>Golang中的 struct tag</title>
