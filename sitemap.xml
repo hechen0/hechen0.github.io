@@ -20,11 +20,6 @@
   </url>
   
   <url>
-    <loc>http://hechen0.com/posts/goroutine-leak/</loc>
-    <lastmod>2018-04-21T20:17:06+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>http://hechen0.com/posts/redis-pagination/</loc>
     <lastmod>2018-04-15T10:19:05+08:00</lastmod>
   </url>
