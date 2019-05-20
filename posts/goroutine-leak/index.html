@@ -11,10 +11,10 @@
 
     <base href="http://hechen0.com">
     <title>
-  xorm对于表名的缓存 · 
+  goroutine泄露 · 
 </title>
 
-    <link rel="canonical" href="http://hechen0.com/posts/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98/">
+    <link rel="canonical" href="http://hechen0.com/posts/goroutine-leak/">
 
     <link rel="stylesheet" href="https://cdn.bootcss.com/normalize/8.0.0/normalize.css">
     <link rel="stylesheet" href="http://hechen0.com/css/style.min.css">
@@ -57,21 +57,41 @@
   <section class="container post">
   <article>
     <header>
-      <h1 class="title">xorm对于表名的缓存</h1>
-      <h2 class="date">2018-03-28</h2>
+      <h1 class="title">goroutine泄露</h1>
+      <h2 class="date">2018-04-21</h2>
     </header>
 
-    <p>最近碰到一个坑</p>
+    
 
-<p>golang中的orm库: xorm</p>
+<p>在go语言中，并发是通过goroutine实现。当goroutine永远阻塞或者进入无限循环状态而没有得到正确处理，但启动这些goroutine的函数就返回时，就产生了goroutine泄露。下面我举几个goroutine泄露的例子。</p>
 
-<p>如果不显示传入表名的话，xorm库可以根据你传入的struct主动调用定义的Tablename()方法去推断表名的。</p>
+<h1 id="写一个没有接收者的channel">写一个没有接收者的channel</h1>
 
-<p>但是这个表名是有缓存的，缓存的结构是map[reflect.Type]string，如果能读到缓存，不会调用Tablename()方法。</p>
+<p>假设程序给后端发送了多个请求，取最先返回的请求，其它请求被丢弃的时候。</p>
 
-<p>最近碰到的坑就是我们在业务层做了分表，导致不能依赖这种隐式推出表名的方法。</p>
+<h1 id="读一个没有发送者的channel">读一个没有发送者的channel</h1>
 
-<p>对于分表而言，传入的struct是相同的，所以reflect.Type也是相同的，所以只会在缓存不存在的时候调用Tablename()方法。</p>
+<h1 id="nil-channel">nil channel</h1>
+
+<p>写nil channel会永远阻塞</p>
+
+<p>读nil channel会永远阻塞</p>
+
+<h1 id="无限循环">无限循环</h1>
+
+<p>goroutine泄露检测</p>
+
+<h1 id="runtime-numgoroutine">runtime.NumGoroutine</h1>
+
+<h1 id="net-http-pprof">net/http/pprof</h1>
+
+<h1 id="runtime-pprof">runtime/pprof</h1>
+
+<h1 id="gops">gops</h1>
+
+<h1 id="leaktest">leaktest</h1>
+
+<p>在程序开始和结束分别调用 runtime.Stack 来获取活跃的goroutine，比较前后是否有新的goroutine</p>
 
   </article>
 </section>
