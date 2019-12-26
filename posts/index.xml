@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on </title>
@@ -34,7 +34,7 @@
 方案一 最简单的方式是按照sql作为缓存key(如将语句 &amp;ldquo;select * from comments limit 10 offset 0&amp;rdquo; md5)，结果作为value，如果同样的sql查询发生了，我们就可以命中缓存
 pro:
  实现简单  con:
- 缓存的数据极有可能存在冗余，如条件&amp;rdquo;limit 10 offset 0&amp;rdquo;和&amp;rdquo;limit 10 offset 5&amp;rdquo;，重复的数据存储在不同的redis key中 只要查询的sql变化，就不会命中缓存 缓存一致性很难保证，如果更新了数据或者添加了新的记录，有的缓存会失效，但很难直接知道哪个key失效了(如总共100条记录，更新了第50条记录，难以知道哪次sql查询缓存了第50条记录)，最简单的做法就是将所有的满足pattern的key清空，比如上述的key可以加上前缀 sql_cache:6f7cb75b5cfe12ca1f51647b0f440251 使用 keys sql_cache:* 找出所有的key，然后清空。  在分页这种场景下，使用最常用的缓存方式有很多问题，所以还是不考虑这种方式。
+ 缓存的数据极有可能存在冗余，如条件&amp;quot;limit 10 offset 0&amp;quot;和&amp;quot;limit 10 offset 5&amp;rdquo;，重复的数据存储在不同的redis key中 只要查询的sql变化，就不会命中缓存 缓存一致性很难保证，如果更新了数据或者添加了新的记录，有的缓存会失效，但很难直接知道哪个key失效了(如总共100条记录，更新了第50条记录，难以知道哪次sql查询缓存了第50条记录)，最简单的做法就是将所有的满足pattern的key清空，比如上述的key可以加上前缀 sql_cache:6f7cb75b5cfe12ca1f51647b0f440251 使用 keys sql_cache:* 找出所有的key，然后清空。  在分页这种场景下，使用最常用的缓存方式有很多问题，所以还是不考虑这种方式。
 方案二 redis的list配合hash也可以满足分页需求，将一类记录(如一篇博文下的所有评论id)按照需要的顺序PUSH到一个key下(如blog:2)，将评论的内容放到hash中，使用LRANGE blog:2:comments 0 10，可以做到对查询直接进行分页，使用HMGET获取评论的具体内容
 pro:
  缓存的数据不存在冗余 支持元素更新，可以hset来更新某一个元素  con:
@@ -42,7 +42,7 @@ pro:
 pro: 前两条和方案二的相同，外加解决了方案二的两个缺陷。
  支持对元素顺序的更改，如果是按照更新时间戳排序，可以使用zadd改变某个元素的score值 即使在并发写的情况，由于元素的顺序只和score值有关，所以并不会出现顺序不一致的情况  方案四 set/list、hash配合sort命令，redis提供的sort命令可以直接对hash的属性进行排序 sort命令本身也支持limit offset参数。
 方案五 看到网上有人说可以使用redis的scan(增量遍历)来做分页，这个就不太合适了。
-redis的scan redis的scan是一种增量遍历(incrementally iterate)，什么叫增量遍历呢?</description>
+redis的scan redis的scan是一种增量遍历(incrementally iterate)，什么叫增量遍历呢? 我的理解是增量遍历是按需遍历，不是一次性把所有数据都读出来，像keys这样的命令就是全量遍历了。下面是scan文档中提供的scan命令的能力。</description>
     </item>
     
     <item>
@@ -54,11 +54,11 @@ redis的scan redis的scan是一种增量遍历(incrementally iterate)，什么�
       <description>struct tag简介 在Go语言中我们通常使用struct来的表示复杂的数据结构，比如二维平面上的一个点，可以用下面的struct表示
 type Point struct { X int64 Y int64 } struct提供的功能不仅限于此，下面介绍下struct中的tag。
 我们可以在struct中的每一个field后面添加一段额外的注释或者说明，来引导struct的encoding到某种格式中，这部分额外的注释说明，我们称之为struct中的field tag，比如:
-type Person struct { FirstName string `json:&amp;#34;first_name&amp;#34;` LastName string `json:&amp;#34;last_name&amp;#34;` MiddleName string `json:&amp;#34;middle_name,omitempty&amp;#34;` } 这里我们定义了一个名为Person的struct，使用tag来指定encoding到json后，各个field在json中的key名称，在最后一个field tag中，我们额外添加了额外的omitempty选项，指示在encoding成json时，如果MiddleName==&amp;ldquo;&amp;ldquo;，那么encoding成json的时候忽略它。如:
+type Person struct { FirstName string `json:&amp;#34;first_name&amp;#34;` LastName string `json:&amp;#34;last_name&amp;#34;` MiddleName string `json:&amp;#34;middle_name,omitempty&amp;#34;` } 这里我们定义了一个名为Person的struct，使用tag来指定encoding到json后，各个field在json中的key名称，在最后一个field tag中，我们额外添加了额外的omitempty选项，指示在encoding成json时，如果MiddleName==&amp;rdquo;&amp;quot;，那么encoding成json的时候忽略它。如:
 p = Person{FirstName: &amp;#34;chen&amp;#34;, LastName:&amp;#34;he&amp;#34;} 对应的encoding后的json就是
 { &amp;#34;first_name&amp;#34;:&amp;#34;chen&amp;#34;, &amp;#34;last_name&amp;#34;:&amp;#34;he&amp;#34; } 关于更多格式的tag选项见本文末尾
 struct tag的解析 在Go语言中field tag是用 reflect.StructTag 这个结构表示的，reflect.StructTag对应于一个string
-package reflect type StructTag string 这个string的按照惯例是由多个 key:&amp;ldquo;value&amp;rdquo; 连接而成，每一组 key:&amp;ldquo;value&amp;rdquo;都代表一种encoding格式，例如:
+package reflect type StructTag string 这个string的按照惯例是由多个 key:&amp;ldquo;value&amp;rdquo; 连接而成，每一组 key:&amp;ldquo;value&amp;quot;都代表一种encoding格式，例如:
 Name string `json:&amp;#34;name&amp;#34; xml:&amp;#34;name&amp;#34;` 但是我们也可以完全不用遵守这种惯例，自定义一套解释规则。
 我们可以使用Go提供的 reflect 包来读取tag中的信息，首先我们需要先获取struct的Type，接着使用 Type.Field 、Type.FieldByIndex 或者 Type.FieldByName 来获取struct中的某一个field，获取到的field中就包含了StructTag信息。举例:</description>
     </item>
