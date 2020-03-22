@@ -10,14 +10,12 @@
     <meta name="keywords" content="博客,developer,后端技术,cs,computer science">
 
     
-      <base href="http://hechen0.com/posts/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98/">
+      <base href="http://hechen0.com/categories/%E6%8A%80%E6%9C%AF/">
     
-    <title>
-  xorm对于表名的缓存 · 
-</title>
+    <title>: 技术 · </title>
 
     
-    <link rel="canonical" href="http://hechen0.com/posts/xorm%E5%AF%B9%E4%BA%8E%E8%A1%A8%E5%90%8D%E7%9A%84%E7%BC%93%E5%AD%98/">
+    <link rel="canonical" href="http://hechen0.com/categories/%E6%8A%80%E6%9C%AF/">
     
 
     <link rel="stylesheet" href="https://cdn.bootcss.com/normalize/8.0.1/normalize.css">
@@ -38,6 +36,10 @@
     <link rel="icon" type="image/png" href="http://hechen0.com/images/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="http://hechen0.com/images/favicon-16x16.png" sizes="16x16">
 
+    <link rel="alternate" type="application/rss+xml" href="http://hechen0.com/categories/%E6%8A%80%E6%9C%AF/index.xml" title="" />
+    
+      <link href="/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="alternate" type="application/rss+xml" title="" />
+      <link href="/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="feed" type="application/rss+xml" title="" />
     
 
     <script type="text/javascript" src="http://tajs.qq.com/stats?sId=66504529" charset="UTF-8"></script>
@@ -80,72 +82,25 @@
 
       <div class="content">
         
-  <section class="container post">
-    <article>
-      <header>
-        <div class="post-title">
-          <h1 class="title">xorm对于表名的缓存</h1>
-        </div>
-        <div class="post-meta">
-          <div class="date">
-            <span class="posted-on">
-              <i class="fas fa-calendar"></i>
-              <time datetime='2018-03-28T19:30:42&#43;08:00'>
-                March 28, 2018
-              </time>
-            </span>
-            <span class="reading-time">
-              <i class="fas fa-clock"></i>
-              
-            </span>
-          </div>
-          
-          
-        </div>
-      </header>
-
-      <div>
-        <p>最近碰到一个坑</p>
-<p>golang中的orm库: xorm</p>
-<p>如果不显示传入表名的话，xorm库可以根据你传入的struct主动调用定义的Tablename()方法去推断表名的。</p>
-<p>但是这个表名是有缓存的，缓存的结构是map[reflect.Type]string，如果能读到缓存，不会调用Tablename()方法。</p>
-<p>最近碰到的坑就是我们在业务层做了分表，导致不能依赖这种隐式推出表名的方法。</p>
-<p>对于分表而言，传入的struct是相同的，所以reflect.Type也是相同的，所以只会在缓存不存在的时候调用Tablename()方法。</p>
-
-      </div>
-
-      <hr>
-
-      <h5><center>扫码关注公众号获取最新文章通知</center></h5>
-      <center><img src="/img/wechat_qrcode.png" alt="扫码关注公众号获取最新文章通知" height="150"></center>
-      
-
-      <footer>
-        <div id="gitalk-container"></div>
-        <script>
-          const gitalk = new Gitalk({
-            clientID: '842ee60d05990ab90e87',
-            clientSecret: '15f54fc0acdc6b92fb2879e1bcd8c6e64010b913',
-            repo: 'blog',
-            owner: 'hechen0',
-            admin: ['hechen0'],
-            id: location.pathname,      
-            distractionFreeMode: false  
-          })
-
-          gitalk.render('gitalk-container')
-        </script>
-
-        
-
-
-        
-        
-      </footer>
-    </article>
-
+  <section class="container list">
+  <h1 class="title">: 技术</h1>
+  <ul>
     
-  </section>
+    <li>
+      <span class="date">March 21, 2020</span>
+      <a class="title" href="/posts/io-multiplexing/">一文看懂IO多路复用</a>
+    </li>
+    
+  </ul>
+  
+
+
+
+
+
+
+</section>
+
 
       </div>
 

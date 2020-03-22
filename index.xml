@@ -5,10 +5,35 @@
     <link>http://hechen0.com/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Mon, 20 May 2019 15:19:05 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 21 Mar 2020 08:00:37 +0800</lastBuildDate>
     
 	<atom:link href="http://hechen0.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>一文看懂IO多路复用</title>
+      <link>http://hechen0.com/posts/io-multiplexing/</link>
+      <pubDate>Sat, 21 Mar 2020 08:00:37 +0800</pubDate>
+      
+      <guid>http://hechen0.com/posts/io-multiplexing/</guid>
+      <description>本文首发在 技术成长之道 博客，访问 hechen0.com 查看更多，或者微信搜索「技术成长之道」关注我的公众号，或者扫描下方二维码关注公众号获得第一时间更新通知！
+ 本文让你理解  什么是IO多路复用 IO多路复用解决什么问题 目前有哪些IO多路复用的方案 具体怎么用 不同IO多路复用方案优缺点  1. 什么是IO多路复用 一句话解释：单线程或单进程同时监测若干个文件描述符是否可以执行IO操作的能力。
+2. 解决什么问题 说在前头 应用程序通常需要处理来自多条事件流中的事件，比如我现在用的电脑，需要同时处理键盘鼠标的输入、中断信号等等事件，再比如web服务器如nginx，需要同时处理来来自N个客户端的事件。
+ 逻辑控制流在时间上的重叠叫做 并发
+ 而CPU单核在同一时刻只能做一件事情，一种解决办法是对CPU进行时分复用(多个事件流将CPU切割成多个时间片，不同事件流的时间片交替进行)。在计算机系统中，我们用线程或者进程来表示一条执行流，通过不同的线程或进程在操作系统内部的调度，来做到对CPU处理的时分复用。这样多个事件流就可以并发进行，不需要一个等待另一个太久，在用户看起来他们似乎就是并行在做一样。
+但凡事都是有成本的。线程/进程也一样，有这么几个方面：
+ 线程/进程创建成本 CPU切换不同线程/进程成本 Context Switch 多线程的资源竞争  有没有一种可以在单线程/进程中处理多个事件流的方法呢？一种答案就是IO多路复用。
+因此IO多路复用解决的本质问题是在用更少的资源完成更多的事。
+为了更全面的理解，先介绍下在Linux系统下所有IO模型。
+I/O模型 目前Linux系统中提供了5种IO处理模型
+ 阻塞IO 非阻塞IO IO多路复用 信号驱动IO 异步IO  阻塞IO 这是最常用的简单的IO模型。阻塞IO意味着当我们发起一次IO操作后一直等待成功或失败之后才返回，在这期间程序不能做其它的事情。阻塞IO操作只能对单个文件描述符进行操作，详见read或write。
+非阻塞IO 我们在发起IO时，通过对文件描述符设置O_NONBLOCK flag来指定该文件描述符的IO操作为非阻塞。非阻塞IO通常发生在一个for循环当中，因为每次进行IO操作时要么IO操作成功，要么当IO操作会阻塞时返回错误EWOULDBLOCK/EAGAIN，然后再根据需要进行下一次的for循环操作，这种类似轮询的方式会浪费很多不必要的CPU资源，是一种糟糕的设计。和阻塞IO一样，非阻塞IO也是通过调用read或writewrite来进行操作的，也只能对单个描述符进行操作。
+IO多路复用 IO多路复用在Linux下包括了三种，select、poll、epoll，抽象来看，他们功能是类似的，但具体细节各有不同：首先都会对一组文件描述符进行相关事件的注册，然后阻塞等待某些事件的发生或等待超时。更多细节详见下面的 &amp;ldquo;具体怎么用&amp;rdquo;。IO多路复用都可以关注多个文件描述符，但对于这三种机制而言，不同数量级文件描述符对性能的影响是不同的，下面会详细介绍。
+信号驱动IO 信号驱动IO是利用信号机制，让内核告知应用程序文件描述符的相关事件。这里有一个信号驱动IO相关的例子。
+但信号驱动IO在网络编程的时候通常很少用到，因为在网络环境中，和socket相关的读写事件太多了，比如下面的事件都会导致SIGIO信号的产生：
+ TCP连接建立 一方断开TCP连接请求 断开TCP连接请求完成 TCP连接半关闭 数据到达TCP socket 数据已经发送出去(如：写buffer有空余空间)  上面所有的这些都会产生SIGIO信号，但我们没办法在SIGIO对应的信号处理函数中区分上述不同的事件，SIGIO只应该在IO事件单一情况下使用，比如说用来监听端口的socket，因为只有客户端发起新连接的时候才会产生SIGIO信号。
+异步IO 异步IO和信号驱动IO差不多，但它比信号驱动IO可以多做一步：相比信号驱动IO需要在程序中完成数据从用户态到内核态(或反方向)的拷贝，异步IO可以把拷贝这一步也帮我们完成之后才通知应用程序。我们使用 aio_read 来读，aio_write 写。</description>
+    </item>
     
     <item>
       <title>面向故障的系统设计</title>
