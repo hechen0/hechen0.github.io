@@ -5,10 +5,21 @@
     <link>http://hechen0.com/posts/</link>
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 28 Mar 2020 09:58:04 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 16 Feb 2021 21:06:28 +0800</lastBuildDate>
     
 	<atom:link href="http://hechen0.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Bigtable论文笔记</title>
+      <link>http://hechen0.com/posts/bigtable-notes/</link>
+      <pubDate>Tue, 16 Feb 2021 21:06:28 +0800</pubDate>
+      
+      <guid>http://hechen0.com/posts/bigtable-notes/</guid>
+      <description>abstract 摘要 略
+introduction 介绍 略
+Data Model 数据模型 简述  BigTable是一个稀疏、分布式、持久化、多维度的有序Map map的key含三个维度：row key、column key及时间戳，map的value是任意字节数组 整个Map结构： (row:string, column:string, time:int64) → string 如何得出这个结构的？潜在的使用需求分析  rows  原子操作在row key这个维度，无论其中有多少个columns在读写，降低实现&amp;amp;使用复杂度 row key 排序，按照 lexicographic order 字典序 多个连续的row组成一个row range，为一个tablet，一个table被动态分割成多个tablet，tablet是系统分布和负载均衡的单元  client可以根据排序特性设计row key以提供更好的局部性，因为排序上越靠近的row key，物理存储位置在一起的可能性会越高，因此范围读取速度也会更快    Column Families  相同column key会被分到同一组，成为column families, 是一个访问控制单元 basic unit of access control 在同一个column familiy的column key通常数据类型相同，会一起压缩 column family必须提前创建，为啥呢  控制总 column families 数量 在百个级别 减少运维中的column family变更 与此相对应的是，column key的数量不受限制   column key的格式为 family:qualifier, family必须是可打印的字符，但qualifier可以是任意字节 访问控制(access control)以及disk、memory的账单计费等，都在 column-family 这一层；通过访问控制，可以管理不同类型的数据，有的可以新增base数据，有的只能读base数据，然后基于base数据再新增派生的数据等等  Timestamps  每个cell（由row key和column key定位）中可以存储一份数据的多个版本，通过时间戳进行索引 timestamp可以由bigtable设置，也可以由客户端指定 版本按timestamp从大到小排序，版本大的先读取 为了减小版本维护成本，有两种 column-family 维度的 版本回收策略  客户端可以指定只保留最近N个版本 或者自定义一个方法？足够新的数据才保存（比如近7天的版本）    API 提供的API 略</description>
+    </item>
     
     <item>
       <title>从gRPC的重试策略说起</title>
