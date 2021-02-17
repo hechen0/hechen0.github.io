@@ -46,7 +46,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
-    <meta name="generator" content="Hugo 0.67.1" />
+    <meta name="generator" content="Hugo 0.80.0" />
   </head>
 
   
@@ -221,7 +221,31 @@
 <p>我在工作中接触的都是Linux系统的服务器，所以在这里只介绍Linux系统的解决方案</p>
 <h3 id="select">select</h3>
 <p>相关函数定义如下</p>
-<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c">    <span class="cm">/* According to POSIX.1-2001, POSIX.1-2008 */</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">    <span class="cm">/* According to POSIX.1-2001, POSIX.1-2008 */</span>
     <span class="cp">#include</span> <span class="cpf">&lt;sys/select.h&gt;</span><span class="cp">
 </span><span class="cp"></span>
     <span class="cm">/* According to earlier standards */</span>
@@ -241,26 +265,72 @@
     <span class="kt">void</span> <span class="nf">FD_SET</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="n">fd_set</span> <span class="o">*</span><span class="n">set</span><span class="p">);</span>
     <span class="kt">void</span> <span class="nf">FD_ZERO</span><span class="p">(</span><span class="n">fd_set</span> <span class="o">*</span><span class="n">set</span><span class="p">);</span>
 
-</code></pre></div><p>select的调用会阻塞到有文件描述符可以进行IO操作或被信号打断或者超时才会返回。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>select的调用会阻塞到有文件描述符可以进行IO操作或被信号打断或者超时才会返回。</p>
 <p>select将监听的文件描述符分为三组，每一组监听不同的需要进行的IO操作。readfds是需要进行读操作的文件描述符，writefds是需要进行写操作的文件描述符，exceptfds是需要进行<a href="http://man7.org/linux/man-pages/man2/poll.2.html" title="poll">异常事件</a>处理的文件描述符。这三个参数可以用NULL来表示对应的事件不需要监听。</p>
 <p>当select返回时，每组文件描述符会被select过滤，只留下可以进行对应IO操作的文件描述符。</p>
 <p>FD_xx系列的函数是用来操作文件描述符组和文件描述符的关系。</p>
 <p>FD_ZERO用来清空文件描述符组。每次调用select前都需要清空一次。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c">    <span class="n">fd_set</span> <span class="n">writefds</span><span class="p">;</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">    <span class="n">fd_set</span> <span class="n">writefds</span><span class="p">;</span>
     <span class="n">FD_ZERO</span><span class="p">(</span><span class="o">&amp;</span><span class="n">writefds</span><span class="p">)</span>
-</code></pre></div><p>FD_SET添加一个文件描述符到组中，FD_CLR对应将一个文件描述符移出组中</p>
-<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c">    <span class="n">FD_SET</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">writefds</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>FD_SET添加一个文件描述符到组中，FD_CLR对应将一个文件描述符移出组中</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">    <span class="n">FD_SET</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">writefds</span><span class="p">);</span>
     <span class="n">FD_CLR</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">writefds</span><span class="p">);</span>
-</code></pre></div><p>FD_ISSET检测一个文件描述符是否在组中，我们用这个来检测一次select调用之后有哪些文件描述符可以进行IO操作</p>
-<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c">    <span class="k">if</span> <span class="p">(</span><span class="n">FD_ISSET</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">readfds</span><span class="p">)){</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>FD_ISSET检测一个文件描述符是否在组中，我们用这个来检测一次select调用之后有哪些文件描述符可以进行IO操作</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">    <span class="k">if</span> <span class="p">(</span><span class="n">FD_ISSET</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">readfds</span><span class="p">)){</span>
         <span class="cm">/* fd可读 */</span>
     <span class="p">}</span>
-</code></pre></div><p>select可同时监听的文件描述符数量是通过FS_SETSIZE来限制的，在Linux系统中，该值为1024，当然我们可以增大这个值，但随着监听的文件描述符数量增加，select的效率会降低，我们会在『不同IO多路复用方案优缺点』一节中展开。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>select可同时监听的文件描述符数量是通过FS_SETSIZE来限制的，在Linux系统中，该值为1024，当然我们可以增大这个值，但随着监听的文件描述符数量增加，select的效率会降低，我们会在『不同IO多路复用方案优缺点』一节中展开。</p>
 <p>pselect和select大体上是一样的，但有一些细节上的<a href="http://man7.org/linux/man-pages/man2/select.2.html" title="select">区别</a>。</p>
 <p><a href="https://gist.github.com/hechen0/c134d2722fe8861288e060dd11e0f9c4">打开链接查看完整的使用select的例子</a></p>
 <h3 id="poll">poll</h3>
 <p>相关函数定义</p>
-<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c">    <span class="cp">#include</span> <span class="cpf">&lt;poll.h&gt;</span><span class="cp">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">    <span class="cp">#include</span> <span class="cpf">&lt;poll.h&gt;</span><span class="cp">
 </span><span class="cp"></span>
     <span class="kt">int</span> <span class="nf">poll</span><span class="p">(</span><span class="k">struct</span> <span class="n">pollfd</span> <span class="o">*</span><span class="n">fds</span><span class="p">,</span> <span class="n">nfds_t</span> <span class="n">nfds</span><span class="p">,</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">);</span>
 
@@ -275,11 +345,29 @@
         <span class="kt">short</span> <span class="n">events</span><span class="p">;</span> <span class="cm">/* requested events to watch */</span>
         <span class="kt">short</span> <span class="n">revents</span><span class="p">;</span> <span class="cm">/* returned events witnessed */</span>
     <span class="p">};</span>
-</code></pre></div><p>和select用三组文件描述符不同的是，poll只有一个pollfd数组，数组中的每个元素都表示一个需要监听IO操作事件的文件描述符。events参数是我们需要关心的事件，revents是所有内核监测到的事件。合法的事件可以参考<a href="http://man7.org/linux/man-pages/man2/poll.2.html" title="poll">这里</a>。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>和select用三组文件描述符不同的是，poll只有一个pollfd数组，数组中的每个元素都表示一个需要监听IO操作事件的文件描述符。events参数是我们需要关心的事件，revents是所有内核监测到的事件。合法的事件可以参考<a href="http://man7.org/linux/man-pages/man2/poll.2.html" title="poll">这里</a>。</p>
 <p><a href="https://gist.github.com/hechen0/1bbc107793ec6cc3b00cbe7d3a54dd29">打开链接查看完整的使用poll的例子</a></p>
 <h3 id="epollepoll"><a href="http://man7.org/linux/man-pages/man7/epoll.7.html" title="epoll">epoll</a></h3>
 <p>相关函数定义如下</p>
-<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c">    <span class="cp">#include</span> <span class="cpf">&lt;sys/epoll.h&gt;</span><span class="cp">
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">    <span class="cp">#include</span> <span class="cpf">&lt;sys/epoll.h&gt;</span><span class="cp">
 </span><span class="cp"></span>
     <span class="kt">int</span> <span class="nf">epoll_create</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">);</span>
     <span class="kt">int</span> <span class="nf">epoll_create1</span><span class="p">(</span><span class="kt">int</span> <span class="n">flags</span><span class="p">);</span>
@@ -291,7 +379,9 @@
     <span class="kt">int</span> <span class="nf">epoll_pwait</span><span class="p">(</span><span class="kt">int</span> <span class="n">epfd</span><span class="p">,</span> <span class="k">struct</span> <span class="n">epoll_event</span> <span class="o">*</span><span class="n">events</span><span class="p">,</span>
                 <span class="kt">int</span> <span class="n">maxevents</span><span class="p">,</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">,</span>
                 <span class="k">const</span> <span class="n">sigset_t</span> <span class="o">*</span><span class="n">sigmask</span><span class="p">);</span>
-</code></pre></div><p><a href="http://man7.org/linux/man-pages/man2/epoll_create.2.html">epoll_create</a>&amp;<a href="http://man7.org/linux/man-pages/man2/epoll_create.2.html">epoll_create1</a>用于创建一个epoll实例，而<a href="http://man7.org/linux/man-pages/man2/epoll_ctl.2.html">epoll_ctl</a>用于往epoll实例中增删改要监测的文件描述符，<a href="http://man7.org/linux/man-pages/man2/epoll_wait.2.html">epoll_wait</a>则用于阻塞的等待可以执行IO操作的文件描述符直到超时。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p><a href="http://man7.org/linux/man-pages/man2/epoll_create.2.html">epoll_create</a>&amp;<a href="http://man7.org/linux/man-pages/man2/epoll_create.2.html">epoll_create1</a>用于创建一个epoll实例，而<a href="http://man7.org/linux/man-pages/man2/epoll_ctl.2.html">epoll_ctl</a>用于往epoll实例中增删改要监测的文件描述符，<a href="http://man7.org/linux/man-pages/man2/epoll_wait.2.html">epoll_wait</a>则用于阻塞的等待可以执行IO操作的文件描述符直到超时。</p>
 <p><a href="https://github.com/millken/c-example/blob/master/epoll-example.c">打开链接查看完整的使用epoll的例子</a></p>
 <h3 id="level-triggered-and-edge-triggered">level-triggered and edge-triggered</h3>
 <p>这两种底层的事件通知机制通常被称为水平触发和边沿触发，真是翻译的词不达意，如果我来翻译，我会翻译成：状态持续通知和状态变化通知。</p>

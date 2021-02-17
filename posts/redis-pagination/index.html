@@ -46,7 +46,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
-    <meta name="generator" content="Hugo 0.67.1" />
+    <meta name="generator" content="Hugo 0.80.0" />
   </head>
 
   
@@ -116,7 +116,7 @@
 </ul>
 <p>con:</p>
 <ul>
-<li>缓存的数据极有可能存在冗余，如条件&quot;limit 10 offset 0&quot;和&quot;limit 10 offset 5&rdquo;，重复的数据存储在不同的redis key中</li>
+<li>缓存的数据极有可能存在冗余，如条件&quot;limit 10 offset 0&quot;和&quot;limit 10 offset 5&quot;，重复的数据存储在不同的redis key中</li>
 <li>只要查询的sql变化，就不会命中缓存</li>
 <li>缓存一致性很难保证，如果更新了数据或者添加了新的记录，有的缓存会失效，但很难直接知道哪个key失效了(如总共100条记录，更新了第50条记录，难以知道哪次sql查询缓存了第50条记录)，最简单的做法就是将所有的满足pattern的key清空，比如上述的key可以加上前缀 sql_cache:6f7cb75b5cfe12ca1f51647b0f440251 使用 keys sql_cache:* 找出所有的key，然后清空。</li>
 </ul>

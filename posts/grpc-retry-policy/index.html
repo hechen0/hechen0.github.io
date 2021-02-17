@@ -46,7 +46,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
-    <meta name="generator" content="Hugo 0.67.1" />
+    <meta name="generator" content="Hugo 0.80.0" />
   </head>
 
   
@@ -174,7 +174,22 @@
 <p><img src="http://s.hechen0.com/too_many_attempts.png" alt="重试策略"></p>
 <h3 id="重试之时间策略">重试之时间策略</h3>
 <p>gPRC用了上面我们提到的 <strong>指数避退+随机间隔</strong> 组合起来的方式进行重试，<a href="https://github.com/grpc/grpc/blob/master/doc/connection-backoff.md">详见这里</a></p>
-<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* 伪码 */</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* 伪码 */</span>
 
 <span class="n">ConnectWithBackoff</span><span class="p">()</span>
   <span class="n">current_backoff</span> <span class="o">=</span> <span class="n">INITIAL_BACKOFF</span>
@@ -185,7 +200,9 @@
     <span class="n">current_backoff</span> <span class="o">=</span> <span class="n">Min</span><span class="p">(</span><span class="n">current_backoff</span> <span class="o">*</span> <span class="n">MULTIPLIER</span><span class="p">,</span> <span class="n">MAX_BACKOFF</span><span class="p">)</span>
     <span class="n">current_deadline</span> <span class="o">=</span> <span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">current_backoff</span> <span class="o">+</span>
       <span class="n">UniformRandom</span><span class="p">(</span><span class="o">-</span><span class="n">JITTER</span> <span class="o">*</span> <span class="n">current_backoff</span><span class="p">,</span> <span class="n">JITTER</span> <span class="o">*</span> <span class="n">current_backoff</span><span class="p">)</span>
-</code></pre></div><p>上面的算法里有这么几个关键的参数</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的算法里有这么几个关键的参数</p>
 <ol>
 <li>INITIAL_BACKOFF：第一次重试等待的间隔</li>
 <li>MULTIPLIER：每次间隔的指数因子</li>
@@ -218,11 +235,21 @@
 </ol>
 <h2 id="54-重试失败">5.4 重试失败</h2>
 <p>当然不能一直重试，对于重试失败，gRPC有以下的策略以顾全大局，对于每个server，客户端都可配置一个针对该server的限制策略如下：</p>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="s2">&#34;retryThrottling&#34;</span><span class="err">:</span> <span class="p">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="s2">&#34;retryThrottling&#34;</span><span class="err">:</span> <span class="p">{</span>
   <span class="nt">&#34;maxTokens&#34;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
   <span class="nt">&#34;tokenRatio&#34;</span><span class="p">:</span> <span class="mf">0.1</span>
 <span class="p">}</span>
-</code></pre></div><p>对于每个server，gRPC的客户端都维护了一个 token_count 变量，变量初始值为配置的 maxTokens 值，每次RPC请求都会影响这个 token_count 变量值：</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>对于每个server，gRPC的客户端都维护了一个 token_count 变量，变量初始值为配置的 maxTokens 值，每次RPC请求都会影响这个 token_count 变量值：</p>
 <ol>
 <li>每次失败的RPC请求都会对 token_count 减1</li>
 <li>每次成功的RPC请求都会对 token_count 增加tokenRation值</li>

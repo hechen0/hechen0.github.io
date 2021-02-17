@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="何晨">
+    <meta name="description" content="技术成长之道">
+    <meta name="keywords" content="博客,developer,后端技术,cs,computer science">
+
+    
+      <base href="http://hechen0.com/posts/leveldb-notes/">
+    
+    <title>
+  leveldb笔记 · 
+</title>
+
+    
+    <link rel="canonical" href="http://hechen0.com/posts/leveldb-notes/">
+    
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/normalize/8.0.1/normalize.css">
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.f061a7b37ea09a97dd9fbd9f6b69343126a15b67129e71a5fe9be5c9f58b8278.css" integrity="sha256-8GGns36gmpfdn72fa2k0MSahW2cSnnGl/pvlyfWLgng=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+    
+    <link rel="icon" type="image/png" href="http://hechen0.com/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="http://hechen0.com/images/favicon-16x16.png" sizes="16x16">
+
+    
+
+    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=66504529" charset="UTF-8"></script>
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+    <meta name="generator" content="Hugo 0.80.0" />
+  </head>
+
+  
+  
+  <body class="colorscheme-light">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="http://hechen0.com/posts/">Blog</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="http://hechen0.com/">Home</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">leveldb笔记</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2021-02-17T10:58:28&#43;08:00'>
+                February 17, 2021
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              
+            </span>
+          </div>
+          
+          <div class="tags">
+    <i class="fas fa-tag"></i>
+        <a href="/tags/infra/">infra</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <h1 id="levedb是什么">levedb是什么</h1>
+<p>官方解释</p>
+<blockquote>
+<p>LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.</p>
+</blockquote>
+<h1 id="解决的问题">解决的问题</h1>
+<p>写多余读的场景</p>
+<h1 id="提供的核心能力">提供的核心能力</h1>
+<h2 id="具备的能力">具备的能力</h2>
+<ul>
+<li>键值是任意字节数组</li>
+<li>按key有序&amp;可自定义排序方法</li>
+<li>核心操作 Put，Get，Delete</li>
+<li>批量操作</li>
+<li>快照</li>
+<li>遍历</li>
+<li>数据压缩</li>
+<li>对外交互通过虚拟层进行，用户可以自定义操作系统层功能（External activity (file system operations etc.) is relayed through a virtual interface so users can customize the operating system interactions.）</li>
+</ul>
+<h2 id="不具备的能力">不具备的能力</h2>
+<ul>
+<li>非SQL数据库，没有关系数据模型，不支持SQL查询，不支持索引</li>
+<li>只支持单进程模式（多线程）</li>
+<li>只是个lib库，没有现成可以使用的client-server，需要自己封装</li>
+</ul>
+<h1 id="资源结构依赖">资源结构依赖</h1>
+<p>lib库，需要和其它系统配合使用，可以参考bigtable</p>
+<h1 id="架构">架构</h1>
+<h2 id="数据结构">数据结构</h2>
+<h3 id="核心数据结构">核心数据结构</h3>
+<ul>
+<li>MemTable
+<ul>
+<li>介绍
+<ul>
+<li>内存中的数据存储结构，所有的数据都会先写入MemTable，再经过compaction到文件中</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>MemTableIterator
+<ul>
+<li>介绍
+<ul>
+<li>内存中MemTable的遍历结构</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>SkipList
+<ul>
+<li>介绍
+<ul>
+<li>内存中的数据存储结构，读写复杂度 O(logn)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Table
+<ul>
+<li>介绍
+<ul>
+<li>文件的数据存储结构，是一个按key有序的map，不可变</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>TableBuilder
+<ul>
+<li>介绍
+<ul>
+<li>封装写文件相关方法</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>BlockBuilder
+<ul>
+<li>介绍
+<ul>
+<li>封装文件中 data block、meta block等写block信息</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>BlockHandle
+<ul>
+<li>介绍
+<ul>
+<li>是一个文件指针，指向文件中某个data block或者meta block，用offset以及size对block进行标识</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Version
+<ul>
+<li>介绍
+<ul>
+<li>记录DB的版本信息，数据结构上是一个双链表</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="其它数据结构">其它数据结构</h3>
+<h2 id="算法过程">算法/过程</h2>
+<h3 id="compaction">compaction</h3>
+<p>分为三个阶段</p>
+<ol>
+<li>内存中的memtable转换为immutable memtable</li>
+<li>immutable memtable → level 0 文件</li>
+<li>level N → level N+1 文件合并</li>
+</ol>
+<p><strong>内存阶段</strong></p>
+<p>操作</p>
+<ul>
+<li>
+<p>内存中正在写的memtable 变为 immutable memtable</p>
+<ul>
+<li>如下进行指针替换</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-cpp" data-lang="cpp"><span class="c1">// db/db_impl.cc
+</span><span class="c1"></span><span class="n">imm_</span> <span class="o">=</span> <span class="n">mem_</span><span class="p">;</span> <span class="c1">// 当前写满的memtable赋值给immutable memtable
+</span><span class="c1"></span><span class="n">has_imm_</span><span class="p">.</span><span class="n">store</span><span class="p">(</span><span class="nb">true</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">memory_order_release</span><span class="p">);</span>
+<span class="n">mem_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MemTable</span><span class="p">(</span><span class="n">internal_comparator_</span><span class="p">);</span> <span class="c1">// 新建一个memtable
+</span><span class="c1"></span><span class="n">mem_</span><span class="o">-&gt;</span><span class="n">Ref</span><span class="p">();</span> <span class="c1">// 赋给当前写入的memtable指针
+</span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<p>触发条件</p>
+<ul>
+<li>DBImpl::Put、DBImpl::Delete 过程 如果当前memtable写满</li>
+</ul>
+<p><strong>内存到文件阶段 minor compaction</strong></p>
+<p><img src="/img/leveldb_2.png" alt="leveldb-2"></p>
+<p>内存数据格式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-markdown" data-lang="markdown">1                               10
+ o---&gt; o---------------------------------------------------------&gt; o    Top level
+   1           3              2                    5
+ o---&gt; o---------------&gt; o---------&gt; o---------------------------&gt; o    Level 3
+   1        2        1        2              3              2
+ o---&gt; o---------&gt; o---&gt; o---------&gt; o---------------&gt; o---------&gt; o    Level 2
+   1     1     1     1     1     1     1     1     1     1     1 
+ o---&gt; o---&gt; o---&gt; o---&gt; o---&gt; o---&gt; o---&gt; o---&gt; o---&gt; o---&gt; o---&gt; o    Bottom level
+Head  1st   2nd   3rd   4th   5th   6th   7th   8th   9th   10th  NIL
+      Node  Node  Node  Node  Node  Node  Node  Node  Node  Node
+</code></pre></td></tr></table>
+</div>
+</div><p>解释</p>
+<ol>
+<li>最底层是一个有序链表</li>
+<li>为了加快单链表的查询速度，在单链表之上增加了多层查询链接，用于快速跳过大部分节点，将查询效率从O(n)降低为O(log n)</li>
+</ol>
+<p>文件数据格式</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html">// 文件中格式
+<span class="p">&lt;</span><span class="nt">beginning_of_file</span><span class="p">&gt;</span>
+[data block 1]
+[data block 2]
+...
+[data block N]
+[meta block 1]
+...
+[meta block K]
+[metaindex block]
+[index block]
+[Footer]        (fixed size; starts at file_size - sizeof(Footer))
+<span class="p">&lt;</span><span class="nt">end_of_file</span><span class="p">&gt;</span>
+
+// footer格式
+metaindex_handle: char[p];     // Block handle for metaindex
+index_handle:     char[q];     // Block handle for index
+padding:          char[40-p-q];// zeroed bytes to make fixed length
+                               // (40==2*BlockHandle::kMaxEncodedLength)
+magic:            fixed64;     // == 0xdb4775248b80fb57 (little-endian)
+</code></pre></td></tr></table>
+</div>
+</div><p>解释</p>
+<ol>
+<li>
+<p>kv键值对按序被放置在data blocks中，所有data block被从文件开头开始连续的排列在一起。每一个data block使用 <code>block_builder.cc</code> 中的代码进行格式化处理，并进行选择性的压缩。</p>
+</li>
+<li>
+<p>data blocks之后是meta blocks。所有的 meta blocks如下所示。未来会添加更多的meta blocks类型，每个 meta block也使用 block_builder.cc 进行格式化处理以及选择性的压缩。</p>
+<ul>
+<li>
+<p>&ldquo;filter&rdquo; Meta Block</p>
+<p>如果open时传入了<code>FilterPolicy</code> ，那么每个磁盘文件就会有这么一个 filter block。TBD: <a href="https://github.com/google/leveldb/blob/master/doc/table_format.md">https://github.com/google/leveldb/blob/master/doc/table_format.md</a></p>
+</li>
+<li>
+<p>&ldquo;stats&rdquo; Meta Block 暂未实现</p>
+<p>存储以下信息</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">data size
+index size
+key size (uncompressed)
+value size (uncompressed)
+number of entries
+number of data blocks
+</code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>
+<p>metaindex block. 包含meta block的索引信息，key为meta block的名称，value为对应的 BlockHandle</p>
+</li>
+<li>
+<p>index block. 包含每个data block的索引信息，每个data block中有一个条目，key为一个 string， 该string为对应data block中的最大key值，value为对应的BlockHandle</p>
+</li>
+<li>
+<p>最后是大小固定的footer block，包含metaindex和index的BlockHandle、zero填充用字节以及一个幻数(用于快速识别文件格式)</p>
+<ul>
+<li>
+<p>幻数：const uint64_t kTableMagicNumber = 0xdb4775248b80fb57ull;</p>
+<blockquote>
+<p>kTableMagicNumber was picked by running
+echo <a href="http://code.google.com/p/leveldb/">http://code.google.com/p/leveldb/</a> | sha1sum
+and taking the leading 64 bits.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>操作</strong></p>
+<ul>
+<li>BackgroundCompaction immutable memtable dump成level 0的sstable(sorted set table)
+<ul>
+<li>
+<p>DBImpl::CompactMemTable 优先进行内存到文件的 minor compaction；完成后直接return</p>
+<p>原因：TBD？</p>
+<ul>
+<li>DBImpl::WriteLevel0Table
+<ul>
+<li>获取下一个文件名  <code>versions_ -&gt; NewFileNumber()</code></li>
+<li>内存到文件的转换 <code>BuildTable</code>
+<ul>
+<li>使用iter遍历memtable</li>
+<li><code>TablerBuilder.Add</code> 添加到文件中
+<ul>
+<li>写入 data block</li>
+</ul>
+</li>
+<li><code>TableBuilder::Finish</code> 按如下顺序写对应的block信息
+<ol>
+<li>meta block (filter)</li>
+<li>metaindex block</li>
+<li>index block</li>
+<li>footer</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>确保持久化到磁盘中  <code>file -&gt; Sync()</code></li>
+<li>最后进行错误检查</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>再进行 major compaction</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>触发条件</strong></p>
+<ul>
+<li>
+<p>在BackgroundCompaction中进行，如下阶段会尝试进行Compaction</p>
+<p>核心思路：compaction由文件状态变化触发（查询也会触发文件状态的变化），没有文件状态的变化只需要在打开BD时进行一次compaction即可，无需一个定时任务进行触发。</p>
+<ul>
+<li>DBImpl::Get阶段 如果内存中没查询到且文件中查询到了
+<ul>
+<li>🤔 优化点：用某个文件的seeks次数信息决定下一次compact的文件
+<ul>
+<li>原因：将热点文件尽快compact到下一层？TBD</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>DBImpl::Put、DBImpl::Delete 过程 如果当前memtable写满</li>
+<li>DB::Open 阶段，db打开阶段</li>
+<li>一次BackgroundCompaction结束后，递归调用BackgroundCompaction
+<ul>
+<li>原因：Previous compaction may have produced too many files in a level,so reschedule another compaction if needed.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>level N → level N+1 文件合并 major compaction</strong></p>
+<p><img src="/img/leveldb_1.png" alt="leveldb-1"></p>
+<p><strong>操作</strong></p>
+<ul>
+<li><code>DBImpl::BackgroundCompaction</code>  进行compaction
+<ul>
+<li><code>DBImpl::CompactMemTable</code> 优先进行minor compaction 将内存中的immutable memtable 写到level 0的文件中</li>
+<li>再进行major compaction
+<ul>
+<li><code>versions_-&gt;PickCompaction()</code> 组装本次compaction的相关信息
+<ul>
+<li>需要确定的信息
+<ul>
+<li>本次compaction发生在哪个level</li>
+<li>确定level后 确定level中的哪个文件进行compaction</li>
+</ul>
+</li>
+<li>判断逻辑
+<ul>
+<li>优先判断level中的数据大小是否超过阈值
+<ul>
+<li><code>current_-&gt;compaction_score_ &gt;= 1</code> 判断当前是否存在某level实际存储数据已经超过设定的阈值，level 1: 10M level 2: 100M 。。。level 6: 1T
+<ul>
+<li>对于level 0特殊处理，不是根据该层数据大小，而是根据level 0层文件数，依据如下两个原因
+<ul>
+<li>version_set.cc:1033 TBD</li>
+</ul>
+</li>
+<li>对于最后一层不进行判断，最后一层理论上可以存储无限多的数据</li>
+</ul>
+</li>
+<li>确定好compaction的level后，挑选进行compaction的文件
+<ul>
+<li><code>compact_pointer_[config::kNumLevels]</code> 存储历史上进行compaction的file，按文件轮流进行compaction，确保每个文件都能进行compaction</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>没有超过阈值的对访问热点(通过seek_times)的文件进行compaction，🤔  这个优化点TBD</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>DBImpl::DoCompactionWork</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="其它算法过程">其它算法/过程</h3>
+<h2 id="关系">关系</h2>
+<p>TBD</p>
+<h3 id="核心关系">核心关系</h3>
+<p>TBD</p>
+<h3 id="其它关系">其它关系</h3>
+<p>TBD</p>
+<h1 id="api">API</h1>
+<h2 id="核心api">核心API</h2>
+<h3 id="get">Get</h3>
+<p>找到对应key，且sequenceNumber最大的value</p>
+<ul>
+<li>过程描述
+<ul>
+<li>mem（memtable using） MemTable::Get 在当前内存 memtable 中搜索</li>
+<li>imm （Memtable being compacted）MemTable::Get 在当前内存 memtable 中搜索</li>
+<li>current Status Version::Get 文件搜索
+<ul>
+<li>ForEachOverlapping
+<ul>
+<li>level 0
+<ul>
+<li>比较所有文件大小两端值 找到所有可能有该key的 level 0</li>
+<li>遍历上述文件</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="put">Put</h3>
+<ul>
+<li>过程描述
+<ul>
+<li>MakeRoomForWrite 确保有空间写入
+<ul>
+<li>循环检测db状态 按优先级排序
+<ul>
+<li>检测到错误直接返回</li>
+<li>kL0_SlowdownWritesTrigger = 8  （Soft limit on number of level-0 files. We slow down writes at this point.）
+<ul>
+<li>sleep 1ms；写入降速，避免出现毛刺</li>
+</ul>
+</li>
+<li>检测当前 memtable 是否有空间，是则允许该次写入，当前memtable空间大小 <code>size_t write_buffer_size = 4 * 1024 * 1024</code></li>
+<li>检测当前是否有memtable正在进行minor compaction，是则等待完成</li>
+<li>kL0_StopWritesTrigger = 12 （Maximum number of level-0 files. We stop writes at this point.），是则等待major compaction完成以减少level 0文件数量</li>
+<li>新建log、新建 memtable 、 触发compaction (走到这里标识当前memtable被写满)
+<ul>
+<li>新文件名 <code>VersionSet::next_file_number_++</code></li>
+<li>新memtable</li>
+<li>尝试触发compaction 按优先级排序
+<ul>
+<li>检测是否已经触发了</li>
+<li>检测DB是否正在被删除 无需进行compaction</li>
+<li>检测是否有错误</li>
+<li>检测是否满足compaction前置条件</li>
+<li>schedule compaction</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>WriteBatch SequenceNumber 版本号+1</li>
+<li>Append log_-&gt;AddRecord  写日志
+<ul>
+<li>按 options.sync 配置写文件： fsync （每次写入都fsync对性能影响极大，但数据不会丢）</li>
+</ul>
+</li>
+<li>WriteBatchInternal::InsertInto 写内存 memtable</li>
+</ul>
+</li>
+<li>优化点
+<ul>
+<li>leveldb中写操作不是瓶颈，但写过多会影响读的效率；所以会有一些列策略限制写
+<ul>
+<li>写多了会造成文件过多，从而使得查找需要大量IO，因为查文件需要检查一遍start、end</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>详细过程</p>
+<p>原因</p>
+<ol>
+<li>Status DB::Put(const WriteOptions&amp; opt, const Slice&amp; key, const Slice&amp; value)
+<ol>
+<li>WriteBatch batch; batch.Put(key, value);</li>
+<li>return DBImpl::Write(const WriteOptions&amp; options, WriteBatch* updates)
+<ol>
+<li>new writer</li>
+<li>MutexLock 上锁</li>
+<li>writes进队列</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="delete">Delete</h3>
+<h3 id="listiteration-遍历">List/Iteration 遍历</h3>
+<h3 id="snapshot">Snapshot</h3>
+<h2 id="其它api">其它API</h2>
+<h1 id="参考">参考</h1>
+<ol>
+<li>源码版本 <a href="https://github.com/google/leveldb">https://github.com/google/leveldb</a> 5bd5f0f67a5eb0ed74c16b3ae847ec4e5bc3e412</li>
+<li><a href="http://smalldatum.blogspot.com/2018/06/the-original-lsm-paper.html">http://smalldatum.blogspot.com/2018/06/the-original-lsm-paper.html</a></li>
+<li><a href="https://github.com/facebook/rocksdb/wiki/Leveled-Compaction">https://github.com/facebook/rocksdb/wiki/Leveled-Compaction</a></li>
+<li><a href="https://yuerblog.cc/wp-content/uploads/leveldb%E5%AE%9E%E7%8E%B0%E8%A7%A3%E6%9E%90.pdf">https://yuerblog.cc/wp-content/uploads/leveldb实现解析.pdf</a></li>
+<li><a href="https://github.com/google/leveldb/blob/master/doc/table_format.md">https://github.com/google/leveldb/blob/master/doc/table_format.md</a></li>
+<li><a href="https://leveldb-handbook.readthedocs.io/zh/latest/compaction.html">https://leveldb-handbook.readthedocs.io/zh/latest/compaction.html</a></li>
+</ol>
+
+      </div>
+
+      <hr>
+
+      <h5><center>扫码关注公众号获取最新文章通知</center></h5>
+      <center><img src="/img/wechat_qrcode.png" alt="扫码关注公众号获取最新文章通知" height="150"></center>
+      
+
+      <footer>
+        <div id="gitalk-container"></div>
+        <script>
+          const gitalk = new Gitalk({
+            clientID: '842ee60d05990ab90e87',
+            clientSecret: '15f54fc0acdc6b92fb2879e1bcd8c6e64010b913',
+            repo: 'blog',
+            owner: 'hechen0',
+            admin: ['hechen0'],
+            id: location.pathname,      
+            distractionFreeMode: false  
+          })
+
+          gitalk.render('gitalk-container')
+        </script>
+
+        
+
+
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2021
+    
+       · 
+       <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-57183016-8', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

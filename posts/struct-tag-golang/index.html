@@ -46,7 +46,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
     <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 
-    <meta name="generator" content="Hugo 0.67.1" />
+    <meta name="generator" content="Hugo 0.80.0" />
   </head>
 
   
@@ -107,40 +107,121 @@
       <div>
         <h1 id="struct-tag简介">struct tag简介</h1>
 <p>在Go语言中我们通常使用struct来的表示复杂的数据结构，比如二维平面上的一个点，可以用下面的struct表示</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Point</span> <span class="kd">struct</span> <span class="p">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Point</span> <span class="kd">struct</span> <span class="p">{</span>
     <span class="nx">X</span> <span class="kt">int64</span>
     <span class="nx">Y</span> <span class="kt">int64</span>
 <span class="p">}</span>
 
-</code></pre></div><p>struct提供的功能不仅限于此，下面介绍下struct中的tag。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>struct提供的功能不仅限于此，下面介绍下struct中的tag。</p>
 <p>我们可以在struct中的每一个field后面添加一段额外的注释或者说明，来引导struct的encoding到某种格式中，这部分额外的注释说明，我们称之为struct中的field tag，比如:</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
     <span class="nx">FirstName</span>  <span class="kt">string</span> <span class="s">`json:&#34;first_name&#34;`</span>
     <span class="nx">LastName</span>   <span class="kt">string</span> <span class="s">`json:&#34;last_name&#34;`</span>
     <span class="nx">MiddleName</span> <span class="kt">string</span> <span class="s">`json:&#34;middle_name,omitempty&#34;`</span>
 <span class="p">}</span>
 
-</code></pre></div><p>这里我们定义了一个名为Person的struct，使用tag来指定encoding到json后，各个field在json中的key名称，在最后一个field tag中，我们额外添加了额外的omitempty选项，指示在encoding成json时，如果MiddleName==&rdquo;&quot;，那么encoding成json的时候忽略它。如:</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">p</span> <span class="p">=</span> <span class="nx">Person</span><span class="p">{</span><span class="nx">FirstName</span><span class="p">:</span> <span class="s">&#34;chen&#34;</span><span class="p">,</span> <span class="nx">LastName</span><span class="p">:</span><span class="s">&#34;he&#34;</span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这里我们定义了一个名为Person的struct，使用tag来指定encoding到json后，各个field在json中的key名称，在最后一个field tag中，我们额外添加了额外的omitempty选项，指示在encoding成json时，如果MiddleName==&quot;&quot;，那么encoding成json的时候忽略它。如:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">p</span> <span class="p">=</span> <span class="nx">Person</span><span class="p">{</span><span class="nx">FirstName</span><span class="p">:</span> <span class="s">&#34;chen&#34;</span><span class="p">,</span> <span class="nx">LastName</span><span class="p">:</span><span class="s">&#34;he&#34;</span><span class="p">}</span>
 
-</code></pre></div><p>对应的encoding后的json就是</p>
-<div class="highlight"><pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>对应的encoding后的json就是</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-json" data-lang="json"><span class="p">{</span>
   <span class="nt">&#34;first_name&#34;</span><span class="p">:</span><span class="s2">&#34;chen&#34;</span><span class="p">,</span>
   <span class="nt">&#34;last_name&#34;</span><span class="p">:</span><span class="s2">&#34;he&#34;</span>
 <span class="p">}</span>
 
-</code></pre></div><p>关于更多格式的tag选项见本文末尾</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>关于更多格式的tag选项见本文末尾</p>
 <h1 id="struct-tag的解析">struct tag的解析</h1>
 <p>在Go语言中field tag是用 reflect.StructTag 这个结构表示的，reflect.StructTag对应于一个string</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">reflect</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">reflect</span>
 <span class="kd">type</span> <span class="nx">StructTag</span> <span class="kt">string</span>
 
-</code></pre></div><p>这个string的按照惯例是由多个 key:&ldquo;value&rdquo; 连接而成，每一组 key:&ldquo;value&quot;都代表一种encoding格式，例如:</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Name</span> <span class="kt">string</span> <span class="s">`json:&#34;name&#34; xml:&#34;name&#34;`</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>这个string的按照惯例是由多个 key:&ldquo;value&rdquo; 连接而成，每一组 key:&ldquo;value&quot;都代表一种encoding格式，例如:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Name</span> <span class="kt">string</span> <span class="s">`json:&#34;name&#34; xml:&#34;name&#34;`</span>
 
-</code></pre></div><p>但是我们也可以完全不用遵守这种惯例，自定义一套解释规则。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>但是我们也可以完全不用遵守这种惯例，自定义一套解释规则。</p>
 <p>我们可以使用Go提供的 <a href="http://link.zhihu.com/?target=https%3A//golang.org/pkg/reflect/">reflect</a> 包来读取tag中的信息，首先我们需要先获取struct的Type，接着使用 <a href="http://link.zhihu.com/?target=https%3A//golang.org/pkg/reflect/%23Value.Field">Type.Field</a> 、<a href="http://link.zhihu.com/?target=https%3A//golang.org/pkg/reflect/%23Value.FieldByIndex">Type.FieldByIndex</a> 或者 <a href="http://link.zhihu.com/?target=https%3A//golang.org/pkg/reflect/%23Value.FieldByName">Type.FieldByName</a> 来获取struct中的某一个field，获取到的field中就包含了StructTag信息。举例:</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
     <span class="nx">Name</span>  <span class="kt">string</span> <span class="s">`mytag:&#34;MyName&#34;`</span>
     <span class="nx">Email</span> <span class="kt">string</span> <span class="s">`mytag:&#34;MyEmail&#34;`</span>
 <span class="p">}</span>
@@ -158,8 +239,22 @@
     <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;\tValue of &#39;mytag&#39;: %q\n&#34;</span><span class="p">,</span> <span class="nx">field</span><span class="p">.</span><span class="nx">Tag</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="s">&#34;mytag&#34;</span><span class="p">))</span>
 <span class="p">}</span>
 
-</code></pre></div><p>结果:</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Field</span><span class="p">:</span> <span class="nx">User</span><span class="p">.</span><span class="nx">Name</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>结果:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Field</span><span class="p">:</span> <span class="nx">User</span><span class="p">.</span><span class="nx">Name</span>
     <span class="nx">Whole</span> <span class="nx">tag</span> <span class="nx">value</span> <span class="p">:</span> <span class="s">&#34;mytag:\&#34;MyName\&#34;&#34;</span>
     <span class="nx">Value</span> <span class="nx">of</span> <span class="err">&#39;</span><span class="nx">mytag</span><span class="err">&#39;</span><span class="p">:</span> <span class="s">&#34;MyName&#34;</span>
 
@@ -167,9 +262,26 @@
     <span class="nx">Whole</span> <span class="nx">tag</span> <span class="nx">value</span> <span class="p">:</span> <span class="s">&#34;mytag:\&#34;MyEmail\&#34;&#34;</span>
     <span class="nx">Value</span> <span class="nx">of</span> <span class="err">&#39;</span><span class="nx">mytag</span><span class="err">&#39;</span><span class="p">:</span> <span class="s">&#34;MyEmail&#34;</span>
 
-</code></pre></div><p>上面说到按惯例tag string是由多个 key:&ldquo;value&rdquo; 连接组成的，如果遵循这个惯例，我们就可以用 StructTag.Get(key string) 方法来获取key对应的value，如果不遵循这个惯例，我们就没法直接获取对应的value，而是必须自定义一套解析tag string的规则。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面说到按惯例tag string是由多个 key:&ldquo;value&rdquo; 连接组成的，如果遵循这个惯例，我们就可以用 StructTag.Get(key string) 方法来获取key对应的value，如果不遵循这个惯例，我们就没法直接获取对应的value，而是必须自定义一套解析tag string的规则。</p>
 <p>Go提供了另外一个方法 StructTag.Lookup()来获取key对应的value，下面的例子可以清楚知道他们的差别:</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
     <span class="nx">Name</span> <span class="kt">string</span>
 <span class="p">}</span>
 <span class="nx">u</span> <span class="o">:=</span> <span class="nx">User</span><span class="p">{</span><span class="s">&#34;Bob&#34;</span><span class="p">}</span>
@@ -180,11 +292,22 @@
     <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;\tmytag is not set&#34;</span><span class="p">)</span>
 <span class="p">}</span>
 
-</code></pre></div><p>结果:</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Value</span> <span class="nx">of</span> <span class="err">&#39;</span><span class="nx">mytag</span><span class="err">&#39;</span><span class="p">:</span> <span class="s">&#34;&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>结果:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">Value</span> <span class="nx">of</span> <span class="err">&#39;</span><span class="nx">mytag</span><span class="err">&#39;</span><span class="p">:</span> <span class="s">&#34;&#34;</span>
 <span class="nx">mytag</span> <span class="nx">is</span> <span class="nx">not</span> <span class="nx">set</span>
 
-</code></pre></div><h2 id="和其它编程语言的对比">和其它编程语言的对比</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="和其它编程语言的对比">和其它编程语言的对比</h2>
 <p>其实StructTag只是作为一个信息存放的地方，并没有和具体的功能绑定，你可以往里面丢任何的信息，但是信息包含的意思是由你自己来定义的，这意味着StructTag提供了强大的灵活性，绝大部分的用法都和encoding有关系，说明它的确非常合适做这件事，但是它并不和encoding功能绑定在一起。</p>
 <p>相对于其它语言而言，Go处理encoding不得不说比较巧妙，比如在Ruby中，我们需要将一个Hash encoding为json，但是有很多时候Hash和json中的field并不是一一对应关系，所以我们需要先生成一个和目标json一一对应的Hash对象，然后再encoding。</p>
 <p>为啥Go中的encoding会使用这种方式来实现呢？</p>

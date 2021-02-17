@@ -5,10 +5,19 @@
     <link>http://hechen0.com/tags/infra/</link>
     <description>Recent content in infra on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Tue, 16 Feb 2021 21:06:28 +0800</lastBuildDate>
-    
-	<atom:link href="http://hechen0.com/tags/infra/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Wed, 17 Feb 2021 10:58:28 +0800</lastBuildDate><atom:link href="http://hechen0.com/tags/infra/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>leveldb笔记</title>
+      <link>http://hechen0.com/posts/leveldb-notes/</link>
+      <pubDate>Wed, 17 Feb 2021 10:58:28 +0800</pubDate>
+      
+      <guid>http://hechen0.com/posts/leveldb-notes/</guid>
+      <description>levedb是什么 官方解释
+ LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.
+ 解决的问题 写多余读的场景
+提供的核心能力 具备的能力  键值是任意字节数组 按key有序&amp;amp;可自定义排序方法 核心操作 Put，Get，Delete 批量操作 快照 遍历 数据压缩 对外交互通过虚拟层进行，用户可以自定义操作系统层功能（External activity (file system operations etc.) is relayed through a virtual interface so users can customize the operating system interactions.）  不具备的能力  非SQL数据库，没有关系数据模型，不支持SQL查询，不支持索引 只支持单进程模式（多线程） 只是个lib库，没有现成可以使用的client-server，需要自己封装  资源结构依赖 lib库，需要和其它系统配合使用，可以参考bigtable
+架构 数据结构 核心数据结构  MemTable  介绍  内存中的数据存储结构，所有的数据都会先写入MemTable，再经过compaction到文件中     MemTableIterator  介绍  内存中MemTable的遍历结构     SkipList  介绍  内存中的数据存储结构，读写复杂度 O(logn)     Table  介绍  文件的数据存储结构，是一个按key有序的map，不可变     TableBuilder  介绍  封装写文件相关方法     BlockBuilder  介绍  封装文件中 data block、meta block等写block信息     BlockHandle  介绍  是一个文件指针，指向文件中某个data block或者meta block，用offset以及size对block进行标识     Version  介绍  记录DB的版本信息，数据结构上是一个双链表      其它数据结构 算法/过程 compaction 分为三个阶段</description>
+    </item>
     
     <item>
       <title>Bigtable论文笔记</title>
