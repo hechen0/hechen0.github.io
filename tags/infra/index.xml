@@ -5,7 +5,19 @@
     <link>http://hechen0.com/tags/infra/</link>
     <description>Recent content in infra on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 17 Feb 2021 10:58:28 +0800</lastBuildDate><atom:link href="http://hechen0.com/tags/infra/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 17 Feb 2021 11:14:59 +0800</lastBuildDate><atom:link href="http://hechen0.com/tags/infra/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Apache HBase</title>
+      <link>http://hechen0.com/posts/hbase/</link>
+      <pubDate>Wed, 17 Feb 2021 11:14:59 +0800</pubDate>
+      
+      <guid>http://hechen0.com/posts/hbase/</guid>
+      <description>背景 Migrating Messenger storage to optimize performance - Facebook Engineering
+HBASE是什么
+ Apache HBase™ is the Hadoop database, a distributed, scalable, big data store.
+  Use Apache HBase™ when you need random, realtime read/write access to your Big Data. This project&amp;rsquo;s goal is the hosting of very large tables &amp;ndash; billions of rows X millions of columns &amp;ndash; atop clusters of commodity hardware. Apache HBase is an open-source, distributed, versioned, non-relational database modeled after Google&amp;rsquo;s Bigtable: A Distributed Storage System for Structured Data by Chang et al.</description>
+    </item>
+    
     <item>
       <title>leveldb笔记</title>
       <link>http://hechen0.com/posts/leveldb-notes/</link>
