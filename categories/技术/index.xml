@@ -5,7 +5,11 @@
     <link>http://hechen0.com/categories/%E6%8A%80%E6%9C%AF/</link>
     <description>Recent content in 技术 on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 28 Mar 2020 09:58:04 +0800</lastBuildDate><atom:link href="http://hechen0.com/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 28 Mar 2020 09:58:04 +0800</lastBuildDate>
+    
+	<atom:link href="http://hechen0.com/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>从gRPC的重试策略说起</title>
       <link>http://hechen0.com/posts/grpc-retry-policy/</link>
