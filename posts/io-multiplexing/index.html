@@ -20,9 +20,10 @@
     <meta property="og:title" content="一文看懂IO多路复用" />
 <meta property="og:description" content="IO多路复用介绍" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://hechen0.com/posts/io-multiplexing/" />
+<meta property="og:url" content="http://hechen0.com/posts/io-multiplexing/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-03-21T08:00:37+08:00" />
 <meta property="article:modified_time" content="2020-03-21T08:00:37+08:00" /><meta property="og:site_name" content="技术成长之道" />
+
 
 
     <title>
@@ -38,7 +39,7 @@
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.8e2b2510f60e1715eae08d113a808dcdaf17f6f711edb9e969be38d0074d240d.css" integrity="sha256-jislEPYOFxXq4I0ROoCNza8X9vcR7bnpab440AdNJA0=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="/css/coder.min.708686f8ab8176e91d44fcbe488a0fe0333b94f405cf18a52383d67ba22f0ccb.css" integrity="sha256-cIaG&#43;KuBdukdRPy&#43;SIoP4DM7lPQFzxilI4PWe6IvDMs=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -57,7 +58,7 @@
 
     
 
-    <meta name="generator" content="Hugo 0.65.2" />
+    <meta name="generator" content="Hugo 0.91.0" />
   </head>
 
   
@@ -143,7 +144,12 @@
 <p>本文首发在 <a href="hechen0.com">技术成长之道</a> 博客，访问 <a href="hechen0.com">hechen0.com</a> 查看更多，或者微信搜索「技术成长之道」关注我的公众号，或者扫描下方二维码关注公众号获得第一时间更新通知！</p>
 </blockquote>
 <p><img src="http://hechen0.com/img/wechat_qrcode.png" alt="微信"></p>
-<h1 id="本文让你理解">本文让你理解</h1>
+<h1 id="本文让你理解">
+  本文让你理解
+  <a class="heading-link" href="#%e6%9c%ac%e6%96%87%e8%ae%a9%e4%bd%a0%e7%90%86%e8%a7%a3">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
 <ol>
 <li>什么是IO多路复用</li>
 <li>IO多路复用解决什么问题</li>
@@ -151,10 +157,25 @@
 <li>具体怎么用</li>
 <li>不同IO多路复用方案优缺点</li>
 </ol>
-<h1 id="1-什么是io多路复用">1. 什么是IO多路复用</h1>
+<h1 id="1-什么是io多路复用">
+  1. 什么是IO多路复用
+  <a class="heading-link" href="#1-%e4%bb%80%e4%b9%88%e6%98%afio%e5%a4%9a%e8%b7%af%e5%a4%8d%e7%94%a8">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
 <p>一句话解释：单线程或单进程同时监测若干个文件描述符是否可以执行IO操作的能力。</p>
-<h1 id="2-解决什么问题">2. 解决什么问题</h1>
-<h2 id="说在前头">说在前头</h2>
+<h1 id="2-解决什么问题">
+  2. 解决什么问题
+  <a class="heading-link" href="#2-%e8%a7%a3%e5%86%b3%e4%bb%80%e4%b9%88%e9%97%ae%e9%a2%98">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<h2 id="说在前头">
+  说在前头
+  <a class="heading-link" href="#%e8%af%b4%e5%9c%a8%e5%89%8d%e5%a4%b4">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <p>应用程序通常需要处理来自多条事件流中的事件，比如我现在用的电脑，需要同时处理键盘鼠标的输入、中断信号等等事件，再比如web服务器如nginx，需要同时处理来来自N个客户端的事件。</p>
 <blockquote>
 <p>逻辑控制流在时间上的重叠叫做 <strong>并发</strong></p>
@@ -169,7 +190,12 @@
 <p>有没有一种可以在单线程/进程中处理多个事件流的方法呢？一种答案就是IO多路复用。</p>
 <p>因此IO多路复用解决的本质问题是在<strong>用更少的资源完成更多的事</strong>。</p>
 <p>为了更全面的理解，先介绍下在Linux系统下所有IO模型。</p>
-<h2 id="io模型">I/O模型</h2>
+<h2 id="io模型">
+  I/O模型
+  <a class="heading-link" href="#io%e6%a8%a1%e5%9e%8b">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <p>目前Linux系统中提供了5种IO处理模型</p>
 <ol>
 <li>阻塞IO</li>
@@ -178,13 +204,33 @@
 <li>信号驱动IO</li>
 <li>异步IO</li>
 </ol>
-<h3 id="阻塞io">阻塞IO</h3>
+<h3 id="阻塞io">
+  阻塞IO
+  <a class="heading-link" href="#%e9%98%bb%e5%a1%9eio">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <p>这是最常用的简单的IO模型。阻塞IO意味着当我们发起一次IO操作后一直等待成功或失败之后才返回，在这期间程序不能做其它的事情。阻塞IO操作只能对单个文件描述符进行操作，详见<a href="http://man7.org/linux/man-pages/man2/read.2.html" title="man read">read</a>或<a href="http://man7.org/linux/man-pages/man2/write.2.html" title="man write">write</a>。</p>
-<h3 id="非阻塞io">非阻塞IO</h3>
+<h3 id="非阻塞io">
+  非阻塞IO
+  <a class="heading-link" href="#%e9%9d%9e%e9%98%bb%e5%a1%9eio">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <p>我们在发起IO时，通过对文件描述符设置O_NONBLOCK flag来指定该文件描述符的IO操作为非阻塞。非阻塞IO通常发生在一个for循环当中，因为每次进行IO操作时要么IO操作成功，要么当IO操作会阻塞时返回错误EWOULDBLOCK/EAGAIN，然后再根据需要进行下一次的for循环操作，这种类似轮询的方式会浪费很多不必要的CPU资源，是一种糟糕的设计。和阻塞IO一样，非阻塞IO也是通过调用<a href="http://man7.org/linux/man-pages/man2/read.2.html" title="man read">read</a>或write<a href="http://man7.org/linux/man-pages/man2/write.2.html" title="man write">write</a>来进行操作的，也只能对单个描述符进行操作。</p>
-<h3 id="io多路复用">IO多路复用</h3>
+<h3 id="io多路复用">
+  IO多路复用
+  <a class="heading-link" href="#io%e5%a4%9a%e8%b7%af%e5%a4%8d%e7%94%a8">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <p>IO多路复用在Linux下包括了三种，<a href="http://man7.org/linux/man-pages/man2/select.2.html" title="select">select</a>、<a href="http://man7.org/linux/man-pages/man2/poll.2.html" title="poll">poll</a>、<a href="http://man7.org/linux/man-pages/man7/epoll.7.html" title="epoll">epoll</a>，抽象来看，他们功能是类似的，但具体细节各有不同：首先都会对一组文件描述符进行相关事件的注册，然后阻塞等待某些事件的发生或等待超时。更多细节详见下面的 &ldquo;具体怎么用&rdquo;。IO多路复用都可以关注多个文件描述符，但对于这三种机制而言，不同数量级文件描述符对性能的影响是不同的，下面会详细介绍。</p>
-<h3 id="信号驱动io">信号驱动IO</h3>
+<h3 id="信号驱动io">
+  信号驱动IO
+  <a class="heading-link" href="#%e4%bf%a1%e5%8f%b7%e9%a9%b1%e5%8a%a8io">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <p><a href="http://man7.org/linux/man-pages/man7/signal.7.html">信号驱动IO</a>是利用信号机制，让内核告知应用程序文件描述符的相关事件。这里有一个信号驱动IO相关的<a href="https://github.com/troydhanson/network/blob/master/tcp/server/sigio-server.c">例子</a>。</p>
 <p>但信号驱动IO在网络编程的时候通常很少用到，因为在网络环境中，和socket相关的读写事件太多了，比如下面的事件都会导致SIGIO信号的产生：</p>
 <ol>
@@ -196,7 +242,12 @@
 <li>数据已经发送出去(如：写buffer有空余空间)</li>
 </ol>
 <p>上面所有的这些都会产生SIGIO信号，但我们没办法在SIGIO对应的信号处理函数中区分上述不同的事件，SIGIO只应该在IO事件单一情况下使用，比如说用来监听端口的socket，因为只有客户端发起新连接的时候才会产生SIGIO信号。</p>
-<h3 id="异步io">异步IO</h3>
+<h3 id="异步io">
+  异步IO
+  <a class="heading-link" href="#%e5%bc%82%e6%ad%a5io">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <p>异步IO和信号驱动IO差不多，但它比信号驱动IO可以多做一步：相比信号驱动IO需要在程序中完成数据从用户态到内核态(或反方向)的拷贝，异步IO可以把拷贝这一步也帮我们完成之后才通知应用程序。我们使用 <a href="http://man7.org/linux/man-pages/man3/aio_read.3.html" title="aio_read">aio_read</a> 来读，<a href="http://man7.org/linux/man-pages/man3/aio_write.3.html" title="aio_write">aio_write</a> 写。</p>
 <blockquote>
 <p>同步IO vs 异步IO</p>
@@ -206,8 +257,18 @@
 </ol>
 <p>所以根据这个定义，上面阻塞IO当然算是同步的IO，非阻塞IO也是同步IO，因为当文件操作符可用时我们还是需要阻塞的读或写，同理IO多路复用和信号驱动IO也是同步IO，只有异步IO是完全完成了数据的拷贝之后才通知程序进行处理，没有阻塞的数据读写过程。</p>
 </blockquote>
-<h1 id="3-目前有哪些io多路复用的方案">3. 目前有哪些IO多路复用的方案</h1>
-<h2 id="解决方案总览">解决方案总览</h2>
+<h1 id="3-目前有哪些io多路复用的方案">
+  3. 目前有哪些IO多路复用的方案
+  <a class="heading-link" href="#3-%e7%9b%ae%e5%89%8d%e6%9c%89%e5%93%aa%e4%ba%9bio%e5%a4%9a%e8%b7%af%e5%a4%8d%e7%94%a8%e7%9a%84%e6%96%b9%e6%a1%88">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<h2 id="解决方案总览">
+  解决方案总览
+  <a class="heading-link" href="#%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88%e6%80%bb%e8%a7%88">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <table>
 <thead>
 <tr>
@@ -230,7 +291,12 @@
 </tr>
 </tbody>
 </table>
-<h2 id="常见软件的io多路复用方案">常见软件的IO多路复用方案</h2>
+<h2 id="常见软件的io多路复用方案">
+  常见软件的IO多路复用方案
+  <a class="heading-link" href="#%e5%b8%b8%e8%a7%81%e8%bd%af%e4%bb%b6%e7%9a%84io%e5%a4%9a%e8%b7%af%e5%a4%8d%e7%94%a8%e6%96%b9%e6%a1%88">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <table>
 <thead>
 <tr>
@@ -249,13 +315,23 @@
 </tr>
 </tbody>
 </table>
-<h1 id="4-具体怎么用">4. 具体怎么用</h1>
+<h1 id="4-具体怎么用">
+  4. 具体怎么用
+  <a class="heading-link" href="#4-%e5%85%b7%e4%bd%93%e6%80%8e%e4%b9%88%e7%94%a8">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
 <p>我在工作中接触的都是Linux系统的服务器，所以在这里只介绍Linux系统的解决方案</p>
-<h3 id="select">select</h3>
+<h3 id="select">
+  select
+  <a class="heading-link" href="#select">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <p>相关函数定义如下</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -277,7 +353,7 @@
 </span><span class="lnt">20
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c">    <span class="cm">/* According to POSIX.1-2001, POSIX.1-2008 */</span>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c">    <span class="cm">/* According to POSIX.1-2001, POSIX.1-2008 */</span>
     <span class="cp">#include</span> <span class="cpf">&lt;sys/select.h&gt;</span><span class="cp">
 </span><span class="cp"></span>
     <span class="cm">/* According to earlier standards */</span>
@@ -306,34 +382,34 @@
 <p>FD_ZERO用来清空文件描述符组。每次调用select前都需要清空一次。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c">    <span class="n">fd_set</span> <span class="n">writefds</span><span class="p">;</span>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c">    <span class="n">fd_set</span> <span class="n">writefds</span><span class="p">;</span>
     <span class="n">FD_ZERO</span><span class="p">(</span><span class="o">&amp;</span><span class="n">writefds</span><span class="p">)</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>FD_SET添加一个文件描述符到组中，FD_CLR对应将一个文件描述符移出组中</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c">    <span class="n">FD_SET</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">writefds</span><span class="p">);</span>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c">    <span class="n">FD_SET</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">writefds</span><span class="p">);</span>
     <span class="n">FD_CLR</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">writefds</span><span class="p">);</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>FD_ISSET检测一个文件描述符是否在组中，我们用这个来检测一次select调用之后有哪些文件描述符可以进行IO操作</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c">    <span class="k">if</span> <span class="p">(</span><span class="n">FD_ISSET</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">readfds</span><span class="p">)){</span>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c">    <span class="k">if</span> <span class="p">(</span><span class="n">FD_ISSET</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">readfds</span><span class="p">)){</span>
         <span class="cm">/* fd可读 */</span>
     <span class="p">}</span>
 </code></pre></td></tr></table>
@@ -341,11 +417,16 @@
 </div><p>select可同时监听的文件描述符数量是通过FS_SETSIZE来限制的，在Linux系统中，该值为1024，当然我们可以增大这个值，但随着监听的文件描述符数量增加，select的效率会降低，我们会在『不同IO多路复用方案优缺点』一节中展开。</p>
 <p>pselect和select大体上是一样的，但有一些细节上的<a href="http://man7.org/linux/man-pages/man2/select.2.html" title="select">区别</a>。</p>
 <p><a href="https://gist.github.com/hechen0/c134d2722fe8861288e060dd11e0f9c4">打开链接查看完整的使用select的例子</a></p>
-<h3 id="poll">poll</h3>
+<h3 id="poll">
+  poll
+  <a class="heading-link" href="#poll">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <p>相关函数定义</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -362,7 +443,7 @@
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c">    <span class="cp">#include</span> <span class="cpf">&lt;poll.h&gt;</span><span class="cp">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c">    <span class="cp">#include</span> <span class="cpf">&lt;poll.h&gt;</span><span class="cp">
 </span><span class="cp"></span>
     <span class="kt">int</span> <span class="nf">poll</span><span class="p">(</span><span class="k">struct</span> <span class="n">pollfd</span> <span class="o">*</span><span class="n">fds</span><span class="p">,</span> <span class="n">nfds_t</span> <span class="n">nfds</span><span class="p">,</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">);</span>
 
@@ -381,11 +462,16 @@
 </div>
 </div><p>和select用三组文件描述符不同的是，poll只有一个pollfd数组，数组中的每个元素都表示一个需要监听IO操作事件的文件描述符。events参数是我们需要关心的事件，revents是所有内核监测到的事件。合法的事件可以参考<a href="http://man7.org/linux/man-pages/man2/poll.2.html" title="poll">这里</a>。</p>
 <p><a href="https://gist.github.com/hechen0/1bbc107793ec6cc3b00cbe7d3a54dd29">打开链接查看完整的使用poll的例子</a></p>
-<h3 id="epollepoll"><a href="http://man7.org/linux/man-pages/man7/epoll.7.html" title="epoll">epoll</a></h3>
+<h3 id="epollepoll">
+  <a href="http://man7.org/linux/man-pages/man7/epoll.7.html" title="epoll">epoll</a>
+  <a class="heading-link" href="#epollepoll">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <p>相关函数定义如下</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -399,7 +485,7 @@
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c">    <span class="cp">#include</span> <span class="cpf">&lt;sys/epoll.h&gt;</span><span class="cp">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c">    <span class="cp">#include</span> <span class="cpf">&lt;sys/epoll.h&gt;</span><span class="cp">
 </span><span class="cp"></span>
     <span class="kt">int</span> <span class="nf">epoll_create</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">);</span>
     <span class="kt">int</span> <span class="nf">epoll_create1</span><span class="p">(</span><span class="kt">int</span> <span class="n">flags</span><span class="p">);</span>
@@ -415,11 +501,21 @@
 </div>
 </div><p><a href="http://man7.org/linux/man-pages/man2/epoll_create.2.html">epoll_create</a>&amp;<a href="http://man7.org/linux/man-pages/man2/epoll_create.2.html">epoll_create1</a>用于创建一个epoll实例，而<a href="http://man7.org/linux/man-pages/man2/epoll_ctl.2.html">epoll_ctl</a>用于往epoll实例中增删改要监测的文件描述符，<a href="http://man7.org/linux/man-pages/man2/epoll_wait.2.html">epoll_wait</a>则用于阻塞的等待可以执行IO操作的文件描述符直到超时。</p>
 <p><a href="https://github.com/millken/c-example/blob/master/epoll-example.c">打开链接查看完整的使用epoll的例子</a></p>
-<h3 id="level-triggered-and-edge-triggered">level-triggered and edge-triggered</h3>
+<h3 id="level-triggered-and-edge-triggered">
+  level-triggered and edge-triggered
+  <a class="heading-link" href="#level-triggered-and-edge-triggered">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <p>这两种底层的事件通知机制通常被称为水平触发和边沿触发，真是翻译的词不达意，如果我来翻译，我会翻译成：状态持续通知和状态变化通知。</p>
 <p>这两个概念来自电路，triggered代表电路激活，也就是有事件通知给程序，level-triggered表示只要有IO操作可以进行比如某个文件描述符有数据可读，每次调用epoll_wait都会返回以通知程序可以进行IO操作，edge-triggered表示只有在文件描述符状态发生变化时，调用epoll_wait才会返回，如果第一次没有全部读完该文件描述符的数据而且没有新数据写入，再次调用epoll_wait都不会有通知给到程序，因为文件描述符的状态没有变化。</p>
 <p>select和poll都是状态持续通知的机制，且不可改变，只要文件描述符中有IO操作可以进行，那么select和poll都会返回以通知程序。而epoll两种通知机制可选。</p>
-<h3 id="状态变化通知edge-triggered模式下的epoll">状态变化通知(edge-triggered)模式下的epoll</h3>
+<h3 id="状态变化通知edge-triggered模式下的epoll">
+  状态变化通知(edge-triggered)模式下的epoll
+  <a class="heading-link" href="#%e7%8a%b6%e6%80%81%e5%8f%98%e5%8c%96%e9%80%9a%e7%9f%a5edge-triggered%e6%a8%a1%e5%bc%8f%e4%b8%8b%e7%9a%84epoll">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <p>在epoll状态变化通知机制下，有一些的特殊的地方需要注意。考虑下面这个例子</p>
 <ol>
 <li>服务端文件描述符rfd代表要执行read操作的TCP socket，rfd已被注册到一个epoll实例中</li>
@@ -435,8 +531,18 @@
 <li>只在read或者write返回EAGAIN或EWOULDBLOCK错误时，才调用epoll_wait等待下次状态改变发生</li>
 </ol>
 <p>通过上述方式，我们可以确保每次epoll_wait返回之后，我们的文件描述符中没有读到一半或写到一半的数据。</p>
-<h1 id="5-不同io多路复用方案优缺点">5. 不同IO多路复用方案优缺点</h1>
-<h2 id="poll-vs-select">poll vs select</h2>
+<h1 id="5-不同io多路复用方案优缺点">
+  5. 不同IO多路复用方案优缺点
+  <a class="heading-link" href="#5-%e4%b8%8d%e5%90%8cio%e5%a4%9a%e8%b7%af%e5%a4%8d%e7%94%a8%e6%96%b9%e6%a1%88%e4%bc%98%e7%bc%ba%e7%82%b9">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<h2 id="poll-vs-select">
+  poll vs select
+  <a class="heading-link" href="#poll-vs-select">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <p>poll和select基本上是一样的，poll相比select好在如下几点：</p>
 <ol>
 <li>poll传参对用户更友好。比如不需要和select一样计算很多奇怪的参数比如nfds(值最大的文件描述符+1)，再比如不需要分开三组传入参数。</li>
@@ -449,13 +555,23 @@
 <li>select提供精度更高(到microsecond)的超时时间，而poll只提供到毫秒的精度。</li>
 </ol>
 <p>但总体而言 select和poll基本一致。</p>
-<h2 id="epoll-vs-pollselect">epoll vs poll&amp;select</h2>
+<h2 id="epoll-vs-pollselect">
+  epoll vs poll&amp;select
+  <a class="heading-link" href="#epoll-vs-pollselect">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <p>epoll优于select&amp;poll在下面几点：</p>
 <ol>
 <li>在需要同时监听的文件描述符数量增加时，select&amp;poll是O(N)的复杂度，epoll是O(1)，在N很小的情况下，差距不会特别大，但如果N很大的前提下，一次O(N)的循环可要比O(1)慢很多，所以高性能的网络服务器都会选择epoll进行IO多路复用。</li>
 <li>epoll内部用一个文件描述符挂载需要监听的文件描述符，这个epoll的文件描述符可以在多个线程/进程共享，所以epoll的使用场景要比select&amp;poll要多。</li>
 </ol>
-<h1 id="总结">总结</h1>
+<h1 id="总结">
+  总结
+  <a class="heading-link" href="#%e6%80%bb%e7%bb%93">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
 <p>本文从使用者的角度，从问题出发，介绍了多种IO多路复用方案，有任何问题欢迎在下方留言交流，或扫描二维码/微信搜索『技术成长之道』关注公众号后留言私信。</p>
 <p>PS：代码永远是最正确的，man文档其次，更多细节可以多看代码和文档。</p>
 <p>参考</p>
@@ -489,7 +605,7 @@
       
         ©
         
-        2021
+        2022
          何晨 
       
       
@@ -505,7 +621,7 @@
 
     
       
-      <script src="/js/coder.min.a350362441276ec5c1671926420497bb8e52b63ead1d51d3c9bc4342d0039526.js" integrity="sha256-o1A2JEEnbsXBZxkmQgSXu45Stj6tHVHTybxDQtADlSY="></script>
+      <script src="/js/coder.min.03b17769f4f91ae35667e1f2a1ca8c16f50562576cf90ff32b3179926914daa5.js" integrity="sha256-A7F3afT5GuNWZ&#43;HyocqMFvUFYlds&#43;Q/zKzF5kmkU2qU="></script>
     
 
     
@@ -523,7 +639,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
 
     
 

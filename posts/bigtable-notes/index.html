@@ -20,9 +20,10 @@
     <meta property="og:title" content="Bigtable论文笔记" />
 <meta property="og:description" content="Bigtable" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="http://hechen0.com/posts/bigtable-notes/" />
+<meta property="og:url" content="http://hechen0.com/posts/bigtable-notes/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2021-02-16T21:06:28+08:00" />
 <meta property="article:modified_time" content="2021-02-16T21:06:28+08:00" /><meta property="og:site_name" content="技术成长之道" />
+
 
 
     <title>
@@ -38,7 +39,7 @@
     
       
       
-      <link rel="stylesheet" href="/css/coder.min.8e2b2510f60e1715eae08d113a808dcdaf17f6f711edb9e969be38d0074d240d.css" integrity="sha256-jislEPYOFxXq4I0ROoCNza8X9vcR7bnpab440AdNJA0=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="/css/coder.min.708686f8ab8176e91d44fcbe488a0fe0333b94f405cf18a52383d67ba22f0ccb.css" integrity="sha256-cIaG&#43;KuBdukdRPy&#43;SIoP4DM7lPQFzxilI4PWe6IvDMs=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -57,7 +58,7 @@
 
     
 
-    <meta name="generator" content="Hugo 0.65.2" />
+    <meta name="generator" content="Hugo 0.91.0" />
   </head>
 
   
@@ -141,19 +142,44 @@
 
       <div>
         
-        <h1 id="abstract-摘要">abstract 摘要</h1>
+        <h1 id="abstract-摘要">
+  abstract 摘要
+  <a class="heading-link" href="#abstract-%e6%91%98%e8%a6%81">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
 <p>略</p>
-<h1 id="introduction-介绍">introduction 介绍</h1>
+<h1 id="introduction-介绍">
+  introduction 介绍
+  <a class="heading-link" href="#introduction-%e4%bb%8b%e7%bb%8d">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
 <p>略</p>
-<h1 id="data-model-数据模型">Data Model 数据模型</h1>
-<h2 id="简述">简述</h2>
+<h1 id="data-model-数据模型">
+  Data Model 数据模型
+  <a class="heading-link" href="#data-model-%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8b">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<h2 id="简述">
+  简述
+  <a class="heading-link" href="#%e7%ae%80%e8%bf%b0">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>BigTable是一个稀疏、分布式、持久化、多维度的有序Map</li>
 <li>map的key含三个维度：row key、column key及时间戳，map的value是任意字节数组</li>
 <li>整个Map结构： (row:string, column:string, time:int64) → string</li>
 <li>如何得出这个结构的？潜在的使用需求分析</li>
 </ul>
-<h2 id="rows">rows</h2>
+<h2 id="rows">
+  rows
+  <a class="heading-link" href="#rows">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>原子操作在row key这个维度，无论其中有多少个columns在读写，降低实现&amp;使用复杂度</li>
 <li>row key 排序，按照 lexicographic order 字典序</li>
@@ -163,7 +189,12 @@
 </ul>
 </li>
 </ul>
-<h2 id="column-families">Column Families</h2>
+<h2 id="column-families">
+  Column Families
+  <a class="heading-link" href="#column-families">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>相同column key会被分到同一组，成为column families, 是一个访问控制单元 basic unit of access control</li>
 <li>在同一个column familiy的column key通常数据类型相同，会一起压缩</li>
@@ -177,7 +208,12 @@
 <li>column key的格式为 family:qualifier, family必须是可打印的字符，但qualifier可以是任意字节</li>
 <li>访问控制(access control)以及disk、memory的账单计费等，都在 column-family 这一层；通过访问控制，可以管理不同类型的数据，有的可以新增base数据，有的只能读base数据，然后基于base数据再新增派生的数据等等</li>
 </ul>
-<h3 id="timestamps">Timestamps</h3>
+<h3 id="timestamps">
+  Timestamps
+  <a class="heading-link" href="#timestamps">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h3>
 <ul>
 <li>每个cell（由row key和column key定位）中可以存储一份数据的多个版本，通过时间戳进行索引</li>
 <li>timestamp可以由bigtable设置，也可以由客户端指定</li>
@@ -189,9 +225,19 @@
 </ul>
 </li>
 </ul>
-<h2 id="api-提供的api">API 提供的API</h2>
+<h2 id="api-提供的api">
+  API 提供的API
+  <a class="heading-link" href="#api-%e6%8f%90%e4%be%9b%e7%9a%84api">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <p>略</p>
-<h2 id="building-blocks-资源结构依赖">Building Blocks 资源结构依赖</h2>
+<h2 id="building-blocks-资源结构依赖">
+  Building Blocks 资源结构依赖
+  <a class="heading-link" href="#building-blocks-%e8%b5%84%e6%ba%90%e7%bb%93%e6%9e%84%e4%be%9d%e8%b5%96">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>存储：<a href="https://research.google.com/archive/gfs-sosp2003.pdf">GFS</a>
 <ul>
@@ -218,8 +264,18 @@
 </ul>
 </li>
 </ul>
-<h1 id="实现">实现</h1>
-<h2 id="三部分组件">三部分组件</h2>
+<h1 id="实现">
+  实现
+  <a class="heading-link" href="#%e5%ae%9e%e7%8e%b0">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<h2 id="三部分组件">
+  三部分组件
+  <a class="heading-link" href="#%e4%b8%89%e9%83%a8%e5%88%86%e7%bb%84%e4%bb%b6">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>client lib
 <ul>
@@ -247,7 +303,12 @@
 </li>
 </ul>
 <p>初始状态是 一个table只有一个tablet</p>
-<h2 id="tablet位置信息管理">Tablet位置信息管理</h2>
+<h2 id="tablet位置信息管理">
+  Tablet位置信息管理
+  <a class="heading-link" href="#tablet%e4%bd%8d%e7%bd%ae%e4%bf%a1%e6%81%af%e7%ae%a1%e7%90%86">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <p>三层层级结构存储，类似B+树的结构</p>
 <p><img src="/img/bigtable_location_hierarchy.png" alt="Bigtable Location"></p>
 <ul>
@@ -276,7 +337,12 @@
 <li>缓存tablet位置信息</li>
 <li>若某个tablet信息未缓存，或者信息不正确，则通过上述层级重新构建客户端缓存</li>
 </ul>
-<h2 id="tablet的管理">Tablet的管理</h2>
+<h2 id="tablet的管理">
+  Tablet的管理
+  <a class="heading-link" href="#tablet%e7%9a%84%e7%ae%a1%e7%90%86">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <p>组件的关系描述</p>
 <ul>
 <li>tablet server
@@ -320,7 +386,12 @@
 </ul>
 </li>
 </ul>
-<h2 id="tablet关键过程">Tablet关键过程</h2>
+<h2 id="tablet关键过程">
+  Tablet关键过程
+  <a class="heading-link" href="#tablet%e5%85%b3%e9%94%ae%e8%bf%87%e7%a8%8b">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>tablet的恢复
 <ul>
@@ -346,7 +417,12 @@
 </ul>
 </li>
 </ul>
-<h2 id="compaction">Compaction</h2>
+<h2 id="compaction">
+  Compaction
+  <a class="heading-link" href="#compaction">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>minor compaction
 <ul>
@@ -381,28 +457,58 @@
 </ul>
 </li>
 </ul>
-<h1 id="优化手段归纳">优化手段归纳</h1>
-<h2 id="locality-group">locality group</h2>
+<h1 id="优化手段归纳">
+  优化手段归纳
+  <a class="heading-link" href="#%e4%bc%98%e5%8c%96%e6%89%8b%e6%ae%b5%e5%bd%92%e7%ba%b3">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<h2 id="locality-group">
+  locality group
+  <a class="heading-link" href="#locality-group">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>客户端可以把多个 column families 分组成为一个locality group，对locality group会生成一个单独的SSTable，以提高读相同locality group下多个column的速度</li>
 <li>locality group提供更高级的调优参数，如内存cache</li>
 </ul>
-<h2 id="compression">Compression</h2>
+<h2 id="compression">
+  Compression
+  <a class="heading-link" href="#compression">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>客户端可以指定是否压缩以及压缩格式，可针对不同类型数据做不同的处理</li>
 </ul>
-<h2 id="read-cache">read cache</h2>
+<h2 id="read-cache">
+  read cache
+  <a class="heading-link" href="#read-cache">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <p>tablet server支持两层cache</p>
 <ul>
 <li>scan cache 缓存 key-value 对；可以提高热key访问速度</li>
 <li>block cache 缓存SSTable blocks；可以提高范围访问速度</li>
 </ul>
-<h2 id="bloom-filters">Bloom filters</h2>
+<h2 id="bloom-filters">
+  Bloom filters
+  <a class="heading-link" href="#bloom-filters">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>快速判断某个row/column对是否在某个SSTable中，减少文件读取数量，减少IO次数</li>
 <li>极大提高读取不存在的 row/column 的速度</li>
 </ul>
-<h2 id="commit-log优化">Commit-log优化</h2>
+<h2 id="commit-log优化">
+  Commit-log优化
+  <a class="heading-link" href="#commit-log%e4%bc%98%e5%8c%96">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>一个tablet server下管理多个tablet，所有tablet的commit log都写到同一个GFS文件中，减少文件数
 <ul>
@@ -416,22 +522,47 @@
 </li>
 <li>GFS写毛刺优化，通过线程池（两个线程）</li>
 </ul>
-<h2 id="tablet-recovery提速">Tablet Recovery提速</h2>
+<h2 id="tablet-recovery提速">
+  Tablet Recovery提速
+  <a class="heading-link" href="#tablet-recovery%e6%8f%90%e9%80%9f">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>master移动tablet前，原来的tablet server先进行一次minor compaction，将内存中的数据尽可能多的持久化到SSTable中</li>
 <li>原来的tablet server停止服务后，unload之前，再进行一次minor compaction，将所有内存数据都持久化到SSTable中，避免了tablet move后需要读取redo log数据进行内存memtable重建</li>
 </ul>
-<h2 id="immutability-不可变">immutability 不可变</h2>
+<h2 id="immutability-不可变">
+  immutability 不可变
+  <a class="heading-link" href="#immutability-%e4%b8%8d%e5%8f%af%e5%8f%98">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
 <ul>
 <li>memtable row 采用 copy-on-write 机制，读写并行进行</li>
 <li>immutable避免了很多并发更新的问题</li>
 <li>immutable SSTable可以提高tablet split的速度，子tablet可以共享父tablet的SSTable</li>
 </ul>
-<h1 id="性能评估">性能评估</h1>
+<h1 id="性能评估">
+  性能评估
+  <a class="heading-link" href="#%e6%80%a7%e8%83%bd%e8%af%84%e4%bc%b0">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
 <p>略</p>
-<h1 id="案例介绍">案例介绍</h1>
+<h1 id="案例介绍">
+  案例介绍
+  <a class="heading-link" href="#%e6%a1%88%e4%be%8b%e4%bb%8b%e7%bb%8d">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
 <p>略</p>
-<h1 id="经验教训">经验教训</h1>
+<h1 id="经验教训">
+  经验教训
+  <a class="heading-link" href="#%e7%bb%8f%e9%aa%8c%e6%95%99%e8%ae%ad">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
 <ul>
 <li>遇到的错误种类比想象的多，对系统持续更新升级，没有一劳永逸的设计</li>
 <li>加新特性一定要慎重，要根据真实使用场景来设计</li>
@@ -464,7 +595,7 @@
       
         ©
         
-        2021
+        2022
          何晨 
       
       
@@ -480,7 +611,7 @@
 
     
       
-      <script src="/js/coder.min.a350362441276ec5c1671926420497bb8e52b63ead1d51d3c9bc4342d0039526.js" integrity="sha256-o1A2JEEnbsXBZxkmQgSXu45Stj6tHVHTybxDQtADlSY="></script>
+      <script src="/js/coder.min.03b17769f4f91ae35667e1f2a1ca8c16f50562576cf90ff32b3179926914daa5.js" integrity="sha256-A7F3afT5GuNWZ&#43;HyocqMFvUFYlds&#43;Q/zKzF5kmkU2qU="></script>
     
 
     
@@ -498,7 +629,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
 
     
 

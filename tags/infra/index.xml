@@ -5,18 +5,14 @@
     <link>http://hechen0.com/tags/infra/</link>
     <description>Recent content in infra on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 17 Feb 2021 11:14:59 +0800</lastBuildDate>
-    
-	<atom:link href="http://hechen0.com/tags/infra/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 17 Feb 2021 11:14:59 +0800</lastBuildDate><atom:link href="http://hechen0.com/tags/infra/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Apache HBase</title>
       <link>http://hechen0.com/posts/hbase/</link>
       <pubDate>Wed, 17 Feb 2021 11:14:59 +0800</pubDate>
       
       <guid>http://hechen0.com/posts/hbase/</guid>
-      <description>背景 Migrating Messenger storage to optimize performance - Facebook Engineering
+      <description>背景    Migrating Messenger storage to optimize performance - Facebook Engineering
 HBASE是什么
  Apache HBase™ is the Hadoop database, a distributed, scalable, big data store.
   Use Apache HBase™ when you need random, realtime read/write access to your Big Data. This project&amp;rsquo;s goal is the hosting of very large tables &amp;ndash; billions of rows X millions of columns &amp;ndash; atop clusters of commodity hardware. Apache HBase is an open-source, distributed, versioned, non-relational database modeled after Google&amp;rsquo;s Bigtable: A Distributed Storage System for Structured Data by Chang et al.</description>
@@ -28,11 +24,10 @@ HBASE是什么
       <pubDate>Wed, 17 Feb 2021 10:58:28 +0800</pubDate>
       
       <guid>http://hechen0.com/posts/leveldb-notes/</guid>
-      <description>levedb是什么 官方解释
+      <description>levedb是什么    官方解释
  LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.
- 解决的问题 写多余读的场景
-提供的核心能力 具备的能力  键值是任意字节数组 按key有序&amp;amp;可自定义排序方法 核心操作 Put，Get，Delete 批量操作 快照 遍历 数据压缩 对外交互通过虚拟层进行，用户可以自定义操作系统层功能（External activity (file system operations etc.) is relayed through a virtual interface so users can customize the operating system interactions.）  不具备的能力  非SQL数据库，没有关系数据模型，不支持SQL查询，不支持索引 只支持单进程模式（多线程） 只是个lib库，没有现成可以使用的client-server，需要自己封装  资源结构依赖 lib库，需要和其它系统配合使用，可以参考bigtable
-架构 数据结构 核心数据结构  MemTable  介绍  内存中的数据存储结构，所有的数据都会先写入MemTable，再经过compaction到文件中     MemTableIterator  介绍  内存中MemTable的遍历结构     SkipList  介绍  内存中的数据存储结构，读写复杂度 O(logn)     Table  介绍  文件的数据存储结构，是一个按key有序的map，不可变     TableBuilder  介绍  封装写文件相关方法     BlockBuilder  介绍  封装文件中 data block、meta block等写block信息     BlockHandle  介绍  是一个文件指针，指向文件中某个data block或者meta block，用offset以及size对block进行标识     Version  介绍  记录DB的版本信息，数据结构上是一个双链表      其它数据结构 算法/过程 compaction 分为三个阶段</description>
+ 解决的问题    写多余读的场景
+提供的核心能力    具备的能力     键值是任意字节数组 按key有序&amp;amp;可自定义排序方法 核心操作 Put，Get，Delete 批量操作 快照 遍历 数据压缩 对外交互通过虚拟层进行，用户可以自定义操作系统层功能（External activity (file system operations etc.) is relayed through a virtual interface so users can customize the operating system interactions.）  不具备的能力     非SQL数据库，没有关系数据模型，不支持SQL查询，不支持索引 只支持单进程模式（多线程） 只是个lib库，没有现成可以使用的client-server，需要自己封装  资源结构依赖    lib库，需要和其它系统配合使用，可以参考bigtable</description>
     </item>
     
     <item>
@@ -41,9 +36,9 @@ HBASE是什么
       <pubDate>Tue, 16 Feb 2021 21:06:28 +0800</pubDate>
       
       <guid>http://hechen0.com/posts/bigtable-notes/</guid>
-      <description>abstract 摘要 略
-introduction 介绍 略
-Data Model 数据模型 简述  BigTable是一个稀疏、分布式、持久化、多维度的有序Map map的key含三个维度：row key、column key及时间戳，map的value是任意字节数组 整个Map结构： (row:string, column:string, time:int64) → string 如何得出这个结构的？潜在的使用需求分析  rows  原子操作在row key这个维度，无论其中有多少个columns在读写，降低实现&amp;amp;使用复杂度 row key 排序，按照 lexicographic order 字典序 多个连续的row组成一个row range，为一个tablet，一个table被动态分割成多个tablet，tablet是系统分布和负载均衡的单元  client可以根据排序特性设计row key以提供更好的局部性，因为排序上越靠近的row key，物理存储位置在一起的可能性会越高，因此范围读取速度也会更快    Column Families  相同column key会被分到同一组，成为column families, 是一个访问控制单元 basic unit of access control 在同一个column familiy的column key通常数据类型相同，会一起压缩 column family必须提前创建，为啥呢  控制总 column families 数量 在百个级别 减少运维中的column family变更 与此相对应的是，column key的数量不受限制   column key的格式为 family:qualifier, family必须是可打印的字符，但qualifier可以是任意字节 访问控制(access control)以及disk、memory的账单计费等，都在 column-family 这一层；通过访问控制，可以管理不同类型的数据，有的可以新增base数据，有的只能读base数据，然后基于base数据再新增派生的数据等等  Timestamps  每个cell（由row key和column key定位）中可以存储一份数据的多个版本，通过时间戳进行索引 timestamp可以由bigtable设置，也可以由客户端指定 版本按timestamp从大到小排序，版本大的先读取 为了减小版本维护成本，有两种 column-family 维度的 版本回收策略  客户端可以指定只保留最近N个版本 或者自定义一个方法？足够新的数据才保存（比如近7天的版本）    API 提供的API 略</description>
+      <description>abstract 摘要    略
+introduction 介绍    略
+Data Model 数据模型    简述     BigTable是一个稀疏、分布式、持久化、多维度的有序Map map的key含三个维度：row key、column key及时间戳，map的value是任意字节数组 整个Map结构： (row:string, column:string, time:int64) → string 如何得出这个结构的？潜在的使用需求分析  rows     原子操作在row key这个维度，无论其中有多少个columns在读写，降低实现&amp;amp;使用复杂度 row key 排序，按照 lexicographic order 字典序 多个连续的row组成一个row range，为一个tablet，一个table被动态分割成多个tablet，tablet是系统分布和负载均衡的单元  client可以根据排序特性设计row key以提供更好的局部性，因为排序上越靠近的row key，物理存储位置在一起的可能性会越高，因此范围读取速度也会更快    Column Families     相同column key会被分到同一组，成为column families, 是一个访问控制单元 basic unit of access control 在同一个column familiy的column key通常数据类型相同，会一起压缩 column family必须提前创建，为啥呢  控制总 column families 数量 在百个级别 减少运维中的column family变更 与此相对应的是，column key的数量不受限制   column key的格式为 family:qualifier, family必须是可打印的字符，但qualifier可以是任意字节 访问控制(access control)以及disk、memory的账单计费等，都在 column-family 这一层；通过访问控制，可以管理不同类型的数据，有的可以新增base数据，有的只能读base数据，然后基于base数据再新增派生的数据等等  Timestamps     每个cell（由row key和column key定位）中可以存储一份数据的多个版本，通过时间戳进行索引 timestamp可以由bigtable设置，也可以由客户端指定 版本按timestamp从大到小排序，版本大的先读取 为了减小版本维护成本，有两种 column-family 维度的 版本回收策略  客户端可以指定只保留最近N个版本 或者自定义一个方法？足够新的数据才保存（比如近7天的版本）    API 提供的API    略</description>
     </item>
     
   </channel>
