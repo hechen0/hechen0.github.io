@@ -5,7 +5,18 @@
     <link>http://hechen0.com/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Wed, 17 Feb 2021 11:14:59 +0800</lastBuildDate><atom:link href="http://hechen0.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 14 May 2022 22:01:17 +0800</lastBuildDate><atom:link href="http://hechen0.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>java网络编程101</title>
+      <link>http://hechen0.com/posts/java_network_programming/</link>
+      <pubDate>Sat, 14 May 2022 22:01:17 +0800</pubDate>
+      
+      <guid>http://hechen0.com/posts/java_network_programming/</guid>
+      <description>摘要    通过hello world HTTP server示例，对比go、java io、java nio、netty网络编程，简单入个门
+Hello World    本节通过hello world http server代码示例对比四者的开发效率、性能
+代码实现    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  // Go package main import ( &amp;#34;fmt&amp;#34; &amp;#34;net/http&amp;#34; ) func main(){ http.ListenAndServe(&amp;#34;:8080&amp;#34;, http.HandlerFunc(hello)) } func hello(w http.ResponseWriter, req *http.Request) { fmt.Fprintf(w, &amp;#34;hello, world\n&amp;#34;) }   1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21  // java io public class IOHelloWorldServer { public static void main(String[] args) throws Exception { HttpServer server = HttpServer.</description>
+    </item>
+    
     <item>
       <title>Apache HBase</title>
       <link>http://hechen0.com/posts/hbase/</link>

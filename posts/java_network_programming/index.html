@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Language" content="en">
+    <meta name="color-scheme" content="light dark">
+
+    
+
+    <meta name="author" content="何晨">
+    <meta name="description" content="摘要    通过hello world HTTP server示例，对比go、java io、java nio、netty网络编程，简单入个门
+Hello World    本节通过hello world http server代码示例对比四者的开发效率、性能
+代码实现    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  // Go package main import ( &#34;fmt&#34; &#34;net/http&#34; ) func main(){ http.ListenAndServe(&#34;:8080&#34;, http.HandlerFunc(hello)) } func hello(w http.ResponseWriter, req *http.Request) { fmt.Fprintf(w, &#34;hello, world\n&#34;) }   1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21  // java io public class IOHelloWorldServer { public static void main(String[] args) throws Exception { HttpServer server = HttpServer.">
+    <meta name="keywords" content="博客,developer,后端技术,cs,computer science">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="java网络编程101"/>
+<meta name="twitter:description" content="摘要    通过hello world HTTP server示例，对比go、java io、java nio、netty网络编程，简单入个门
+Hello World    本节通过hello world http server代码示例对比四者的开发效率、性能
+代码实现    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  // Go package main import ( &#34;fmt&#34; &#34;net/http&#34; ) func main(){ http.ListenAndServe(&#34;:8080&#34;, http.HandlerFunc(hello)) } func hello(w http.ResponseWriter, req *http.Request) { fmt.Fprintf(w, &#34;hello, world\n&#34;) }   1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21  // java io public class IOHelloWorldServer { public static void main(String[] args) throws Exception { HttpServer server = HttpServer."/>
+
+    <meta property="og:title" content="java网络编程101" />
+<meta property="og:description" content="摘要    通过hello world HTTP server示例，对比go、java io、java nio、netty网络编程，简单入个门
+Hello World    本节通过hello world http server代码示例对比四者的开发效率、性能
+代码实现    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  // Go package main import ( &#34;fmt&#34; &#34;net/http&#34; ) func main(){ http.ListenAndServe(&#34;:8080&#34;, http.HandlerFunc(hello)) } func hello(w http.ResponseWriter, req *http.Request) { fmt.Fprintf(w, &#34;hello, world\n&#34;) }   1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21  // java io public class IOHelloWorldServer { public static void main(String[] args) throws Exception { HttpServer server = HttpServer." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://hechen0.com/posts/java_network_programming/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-05-14T22:01:17+08:00" />
+<meta property="article:modified_time" content="2022-05-14T22:01:17+08:00" /><meta property="og:site_name" content="技术成长之道" />
+
+
+
+    <title>
+  java网络编程101 · 
+</title>
+
+    
+      <link rel="canonical" href="http://hechen0.com/posts/java_network_programming/">
+    
+
+    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
+
+    
+      
+      
+      <link rel="stylesheet" href="/css/coder.min.708686f8ab8176e91d44fcbe488a0fe0333b94f405cf18a52383d67ba22f0ccb.css" integrity="sha256-cIaG&#43;KuBdukdRPy&#43;SIoP4DM7lPQFzxilI4PWe6IvDMs=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+    
+
+    <meta name="generator" content="Hugo 0.91.0" />
+  </head>
+
+  
+  
+  <body class="preload-transitions colorscheme-light"
+        onload=""
+  >
+    
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="/">
+      
+    </a>
+    
+      <input type="checkbox" id="menu-toggle" />
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/posts/">Blog</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="/">Home</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">
+            <a class="title-link" href="http://hechen0.com/posts/java_network_programming/">
+              java网络编程101
+            </a>
+          </h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+              <time datetime='2022-05-14T22:01:17&#43;08:00'>
+                May 14, 2022
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              7-minute read
+            </span>
+          </div>
+          
+          
+          
+        </div>
+      </header>
+
+      <div>
+        
+        <h1 id="摘要">
+  摘要
+  <a class="heading-link" href="#%e6%91%98%e8%a6%81">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>通过hello world HTTP server示例，对比go、java io、java nio、netty网络编程，简单入个门</p>
+<h1 id="hello-world">
+  Hello World
+  <a class="heading-link" href="#hello-world">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<p>本节通过hello world http server代码示例对比四者的开发效率、性能</p>
+<h2 id="代码实现">
+  代码实现
+  <a class="heading-link" href="#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="c1">// Go
+</span><span class="c1"></span><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;net/http&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="nx">http</span><span class="p">.</span><span class="nf">ListenAndServe</span><span class="p">(</span><span class="s">&#34;:8080&#34;</span><span class="p">,</span> <span class="nx">http</span><span class="p">.</span><span class="nf">HandlerFunc</span><span class="p">(</span><span class="nx">hello</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">hello</span><span class="p">(</span><span class="nx">w</span> <span class="nx">http</span><span class="p">.</span><span class="nx">ResponseWriter</span><span class="p">,</span> <span class="nx">req</span> <span class="o">*</span><span class="nx">http</span><span class="p">.</span><span class="nx">Request</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Fprintf</span><span class="p">(</span><span class="nx">w</span><span class="p">,</span> <span class="s">&#34;hello, world\n&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="c1">// java io
+</span><span class="c1"></span><span class="kr">public</span> <span class="kr">class</span> <span class="nx">IOHelloWorldServer</span> <span class="p">{</span>
+
+    <span class="kr">public</span> <span class="kr">static</span> <span class="k">void</span> <span class="nx">main</span><span class="p">(</span><span class="nb">String</span><span class="p">[]</span> <span class="nx">args</span><span class="p">)</span> <span class="kr">throws</span> <span class="nx">Exception</span> <span class="p">{</span>
+        <span class="nx">HttpServer</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">HttpServer</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="k">new</span> <span class="nx">InetSocketAddress</span><span class="p">(</span><span class="mi">8080</span><span class="p">),</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="nx">server</span><span class="p">.</span><span class="nx">createContext</span><span class="p">(</span><span class="s2">&#34;/javaio&#34;</span><span class="p">,</span> <span class="k">new</span> <span class="nx">MyHandler</span><span class="p">());</span>
+        <span class="nx">server</span><span class="p">.</span><span class="nx">setExecutor</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span> <span class="c1">// creates a default executor
+</span><span class="c1"></span>        <span class="nx">server</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kr">static</span> <span class="kr">class</span> <span class="nx">MyHandler</span> <span class="kr">implements</span> <span class="nx">HttpHandler</span> <span class="p">{</span>
+        <span class="err">@</span><span class="nx">Override</span>
+        <span class="kr">public</span> <span class="k">void</span> <span class="nx">handle</span><span class="p">(</span><span class="nx">HttpExchange</span> <span class="nx">t</span><span class="p">)</span> <span class="kr">throws</span> <span class="nx">IOException</span> <span class="p">{</span>
+            <span class="nb">String</span> <span class="nx">response</span> <span class="o">=</span> <span class="s2">&#34;hello world&#34;</span><span class="p">;</span>
+            <span class="nx">t</span><span class="p">.</span><span class="nx">sendResponseHeaders</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="nx">response</span><span class="p">.</span><span class="nx">length</span><span class="p">());</span>
+            <span class="nx">OutputStream</span> <span class="nx">os</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">getResponseBody</span><span class="p">();</span>
+            <span class="nx">os</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">getBytes</span><span class="p">());</span>
+            <span class="nx">os</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="c1">// java nio
+</span><span class="c1"></span>
+<span class="kr">public</span> <span class="kr">class</span> <span class="nx">NioHelloWorldServer</span> <span class="p">{</span>
+    <span class="kr">private</span> <span class="kr">static</span> <span class="nx">ServerSocketChannel</span> <span class="nx">serverChannel</span><span class="p">;</span>
+    <span class="kr">private</span> <span class="kr">static</span> <span class="nx">Selector</span> <span class="nx">selector</span><span class="p">;</span>
+
+    <span class="kr">public</span> <span class="kr">static</span> <span class="k">void</span> <span class="nx">main</span><span class="p">(</span><span class="nb">String</span><span class="p">[]</span> <span class="nx">args</span><span class="p">)</span> <span class="kr">throws</span> <span class="nx">Exception</span> <span class="p">{</span>
+
+        <span class="nx">selector</span> <span class="o">=</span> <span class="nx">Selector</span><span class="p">.</span><span class="nx">open</span><span class="p">();</span>
+        <span class="nx">serverChannel</span> <span class="o">=</span> <span class="nx">ServerSocketChannel</span><span class="p">.</span><span class="nx">open</span><span class="p">();</span>
+        <span class="nx">serverChannel</span><span class="p">.</span><span class="nx">configureBlocking</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+        <span class="nx">serverChannel</span><span class="p">.</span><span class="nx">socket</span><span class="p">().</span><span class="nx">bind</span><span class="p">(</span><span class="k">new</span> <span class="nx">InetSocketAddress</span><span class="p">(</span><span class="nx">InetAddress</span><span class="p">.</span><span class="nx">getByName</span><span class="p">(</span><span class="s2">&#34;localhost&#34;</span><span class="p">),</span> <span class="mi">8080</span><span class="p">));</span>
+        <span class="nx">serverChannel</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="nx">selector</span><span class="p">,</span> <span class="nx">SelectionKey</span><span class="p">.</span><span class="nx">OP_ACCEPT</span><span class="p">);</span>
+        <span class="nx">System</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">println</span><span class="p">(</span><span class="s2">&#34;Server is now listening on port: 8080&#34;</span><span class="p">);</span>
+
+        <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kr">int</span> <span class="nx">readyNum</span> <span class="o">=</span> <span class="nx">selector</span><span class="p">.</span><span class="nx">select</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">readyNum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">continue</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="nx">Set</span><span class="p">&lt;</span><span class="nt">SelectionKey</span><span class="p">&gt;</span> <span class="nx">keys</span> <span class="o">=</span> <span class="nx">selector</span><span class="p">.</span><span class="nx">selectedKeys</span><span class="p">();</span>
+            <span class="nx">Iterator</span><span class="p">&lt;</span><span class="nt">SelectionKey</span><span class="p">&gt;</span> <span class="nx">keyIterator</span> <span class="o">=</span> <span class="nx">keys</span><span class="p">.</span><span class="nx">iterator</span><span class="p">();</span>
+            <span class="k">while</span> <span class="p">(</span><span class="nx">keyIterator</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nx">SelectionKey</span> <span class="nx">key</span> <span class="o">=</span> <span class="nx">keyIterator</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span>
+                <span class="nx">keyIterator</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+                <span class="k">try</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">key</span><span class="p">.</span><span class="nx">isValid</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">continue</span><span class="p">;</span>
+                    <span class="p">}</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="nx">key</span><span class="p">.</span><span class="nx">isAcceptable</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="nx">accept</span><span class="p">();</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">key</span><span class="p">.</span><span class="nx">isReadable</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="nx">read</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">key</span><span class="p">.</span><span class="nx">isWritable</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="nx">write</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+                    <span class="p">}</span>
+                <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">Exception</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">System</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">printf</span><span class="p">(</span><span class="s2">&#34;Error occurred during handling key %s. Closing connection\n&#34;</span><span class="p">,</span> <span class="nx">e</span><span class="p">.</span><span class="nx">getMessage</span><span class="p">());</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kr">private</span> <span class="kr">static</span> <span class="k">void</span> <span class="nx">accept</span><span class="p">()</span> <span class="kr">throws</span> <span class="nx">IOException</span> <span class="p">{</span>
+        <span class="nx">SocketChannel</span> <span class="nx">clientChannel</span> <span class="o">=</span> <span class="nx">serverChannel</span><span class="p">.</span><span class="nx">accept</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">clientChannel</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">System</span><span class="p">.</span><span class="nx">out</span><span class="p">.</span><span class="nx">printf</span><span class="p">(</span><span class="s2">&#34;No connection is available. Skipping selection key\n&#34;</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nx">clientChannel</span><span class="p">.</span><span class="nx">configureBlocking</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+        <span class="nx">clientChannel</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="nx">selector</span><span class="p">,</span> <span class="nx">SelectionKey</span><span class="p">.</span><span class="nx">OP_READ</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kr">private</span> <span class="kr">static</span> <span class="k">void</span> <span class="nx">read</span><span class="p">(</span><span class="nx">SelectionKey</span> <span class="nx">key</span><span class="p">)</span> <span class="kr">throws</span> <span class="nx">IOException</span> <span class="p">{</span>
+        <span class="c1">// switch to write mode
+</span><span class="c1"></span>        <span class="nx">key</span><span class="p">.</span><span class="nx">interestOps</span><span class="p">(</span><span class="nx">SelectionKey</span><span class="p">.</span><span class="nx">OP_WRITE</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kr">private</span> <span class="kr">static</span> <span class="k">void</span> <span class="nx">write</span><span class="p">(</span><span class="nx">SelectionKey</span> <span class="nx">key</span><span class="p">)</span> <span class="kr">throws</span> <span class="nx">IOException</span> <span class="p">{</span>
+        <span class="nx">SocketChannel</span> <span class="nx">clientChannel</span> <span class="o">=</span> <span class="p">(</span><span class="nx">SocketChannel</span><span class="p">)</span> <span class="nx">key</span><span class="p">.</span><span class="nx">channel</span><span class="p">();</span>
+        <span class="nx">ByteBuffer</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="nx">ByteBuffer</span><span class="p">.</span><span class="nx">wrap</span><span class="p">(</span><span class="s2">&#34;HTTP/1.1 200 OK\r\nConnection: close\r\n\r\nhello world\n&#34;</span><span class="p">.</span><span class="nx">getBytes</span><span class="p">());</span>
+        <span class="nx">clientChannel</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">buffer</span><span class="p">);</span>
+        <span class="nx">clientChannel</span><span class="p">.</span><span class="nx">close</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="c1">// netty
+</span><span class="c1"></span>
+<span class="c1">// file HelloWorldServer
+</span><span class="c1"></span><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">HelloWorldServer</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+        <span class="c1">// Configure the server.
+</span><span class="c1"></span>        <span class="n">EventLoopGroup</span> <span class="n">bossGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NioEventLoopGroup</span><span class="o">(</span><span class="n">1</span><span class="o">);</span>
+        <span class="n">EventLoopGroup</span> <span class="n">workerGroup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NioEventLoopGroup</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">ServerBootstrap</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ServerBootstrap</span><span class="o">();</span>
+            <span class="n">b</span><span class="o">.</span><span class="na">option</span><span class="o">(</span><span class="n">ChannelOption</span><span class="o">.</span><span class="na">SO_BACKLOG</span><span class="o">,</span> <span class="n">1024</span><span class="o">);</span>
+            <span class="n">b</span><span class="o">.</span><span class="na">group</span><span class="o">(</span><span class="n">bossGroup</span><span class="o">,</span> <span class="n">workerGroup</span><span class="o">)</span>
+                    <span class="o">.</span><span class="na">channel</span><span class="o">(</span><span class="n">NioServerSocketChannel</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+                    <span class="o">.</span><span class="na">handler</span><span class="o">(</span><span class="k">new</span> <span class="n">LoggingHandler</span><span class="o">(</span><span class="n">LogLevel</span><span class="o">.</span><span class="na">INFO</span><span class="o">))</span>
+                    <span class="o">.</span><span class="na">childHandler</span><span class="o">(</span><span class="k">new</span> <span class="n">HttpHelloWorldServerInitializer</span><span class="o">());</span>
+
+            <span class="n">Channel</span> <span class="n">ch</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="n">8080</span><span class="o">).</span><span class="na">sync</span><span class="o">().</span><span class="na">channel</span><span class="o">();</span>
+
+            <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Open your web browser and navigate to http://localhost:8080&#34;</span><span class="o">);</span>
+
+            <span class="n">ch</span><span class="o">.</span><span class="na">closeFuture</span><span class="o">().</span><span class="na">sync</span><span class="o">();</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">bossGroup</span><span class="o">.</span><span class="na">shutdownGracefully</span><span class="o">();</span>
+            <span class="n">workerGroup</span><span class="o">.</span><span class="na">shutdownGracefully</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">//file HttpHelloWorldServerHandler
+</span><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HttpHelloWorldServerHandler</span> <span class="kd">extends</span> <span class="n">SimpleChannelInboundHandler</span><span class="o">&lt;</span><span class="n">HttpObject</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">CONTENT</span> <span class="o">=</span> <span class="o">{</span> <span class="sc">&#39;H&#39;</span><span class="o">,</span> <span class="sc">&#39;e&#39;</span><span class="o">,</span> <span class="sc">&#39;l&#39;</span><span class="o">,</span> <span class="sc">&#39;l&#39;</span><span class="o">,</span> <span class="sc">&#39;o&#39;</span><span class="o">,</span> <span class="sc">&#39; &#39;</span><span class="o">,</span> <span class="sc">&#39;W&#39;</span><span class="o">,</span> <span class="sc">&#39;o&#39;</span><span class="o">,</span> <span class="sc">&#39;r&#39;</span><span class="o">,</span> <span class="sc">&#39;l&#39;</span><span class="o">,</span> <span class="sc">&#39;d&#39;</span> <span class="o">};</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">channelReadComplete</span><span class="o">(</span><span class="n">ChannelHandlerContext</span> <span class="n">ctx</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="na">flush</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">channelRead0</span><span class="o">(</span><span class="n">ChannelHandlerContext</span> <span class="n">ctx</span><span class="o">,</span> <span class="n">HttpObject</span> <span class="n">msg</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">msg</span> <span class="k">instanceof</span> <span class="n">HttpRequest</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">HttpRequest</span> <span class="n">req</span> <span class="o">=</span> <span class="o">(</span><span class="n">HttpRequest</span><span class="o">)</span> <span class="n">msg</span><span class="o">;</span>
+
+            <span class="kt">boolean</span> <span class="n">keepAlive</span> <span class="o">=</span> <span class="n">HttpUtil</span><span class="o">.</span><span class="na">isKeepAlive</span><span class="o">(</span><span class="n">req</span><span class="o">);</span>
+            <span class="n">FullHttpResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultFullHttpResponse</span><span class="o">(</span><span class="n">req</span><span class="o">.</span><span class="na">protocolVersion</span><span class="o">(),</span> <span class="n">OK</span><span class="o">,</span>
+                    <span class="n">Unpooled</span><span class="o">.</span><span class="na">wrappedBuffer</span><span class="o">(</span><span class="n">CONTENT</span><span class="o">));</span>
+            <span class="n">response</span><span class="o">.</span><span class="na">headers</span><span class="o">()</span>
+                    <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">CONTENT_TYPE</span><span class="o">,</span> <span class="n">TEXT_PLAIN</span><span class="o">)</span>
+                    <span class="o">.</span><span class="na">setInt</span><span class="o">(</span><span class="n">CONTENT_LENGTH</span><span class="o">,</span> <span class="n">response</span><span class="o">.</span><span class="na">content</span><span class="o">().</span><span class="na">readableBytes</span><span class="o">());</span>
+
+            <span class="k">if</span> <span class="o">(</span><span class="n">keepAlive</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span> <span class="o">(!</span><span class="n">req</span><span class="o">.</span><span class="na">protocolVersion</span><span class="o">().</span><span class="na">isKeepAliveDefault</span><span class="o">())</span> <span class="o">{</span>
+                    <span class="n">response</span><span class="o">.</span><span class="na">headers</span><span class="o">().</span><span class="na">set</span><span class="o">(</span><span class="n">CONNECTION</span><span class="o">,</span> <span class="n">KEEP_ALIVE</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="c1">// Tell the client we&#39;re going to close the connection.
+</span><span class="c1"></span>                <span class="n">response</span><span class="o">.</span><span class="na">headers</span><span class="o">().</span><span class="na">set</span><span class="o">(</span><span class="n">CONNECTION</span><span class="o">,</span> <span class="n">CLOSE</span><span class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="n">ChannelFuture</span> <span class="n">f</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">response</span><span class="o">);</span>
+
+            <span class="k">if</span> <span class="o">(!</span><span class="n">keepAlive</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">f</span><span class="o">.</span><span class="na">addListener</span><span class="o">(</span><span class="n">ChannelFutureListener</span><span class="o">.</span><span class="na">CLOSE</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">exceptionCaught</span><span class="o">(</span><span class="n">ChannelHandlerContext</span> <span class="n">ctx</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">cause</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">cause</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// file HttpHelloWorldServerInitializer
+</span><span class="c1"></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HttpHelloWorldServerInitializer</span> <span class="kd">extends</span> <span class="n">ChannelInitializer</span><span class="o">&lt;</span><span class="n">SocketChannel</span><span class="o">&gt;</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">initChannel</span><span class="o">(</span><span class="n">SocketChannel</span> <span class="n">ch</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ChannelPipeline</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ch</span><span class="o">.</span><span class="na">pipeline</span><span class="o">();</span>
+        <span class="n">p</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="k">new</span> <span class="n">HttpServerCodec</span><span class="o">());</span>
+        <span class="n">p</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="k">new</span> <span class="n">HttpServerExpectContinueHandler</span><span class="o">());</span>
+        <span class="n">p</span><span class="o">.</span><span class="na">addLast</span><span class="o">(</span><span class="k">new</span> <span class="n">HttpHelloWorldServerHandler</span><span class="o">());</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id="开发效率">
+  开发效率
+  <a class="heading-link" href="#%e5%bc%80%e5%8f%91%e6%95%88%e7%8e%87">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<ul>
+<li>Go版本无疑是最简洁的，核心原因在于Go <code>net/http</code> 包封装了大量的细节，让程序员的开发心智极大降低，如果看 <code>net/http</code> 包的实现，可以看到大量HTTP协议细节，以及各类优化</li>
+<li>而在Java世界中，笔者能找到最接近Go <code>net/http</code> 包封装的就是 <code>com.sun.net.httpserver.HttpServer</code> 包，近似达到Go中 <code>net/http</code> 包的效果，也非常简洁；与Go版本差距在于依旧需要关心一些 executor、OutputStream等概念</li>
+<li>对比之下 <code>java nio</code> 的实现可谓是细节满满，尤其是 <code>java nio</code> 的实现让我回到了socket编程，抽象层级和其它三者而言完全不在一个层级之上</li>
+<li><code>netty</code> 的实现则引入了一些新的概念以补足 <code>java nio</code> 的缺陷，隐藏起一些底层实现的细节；相比于 <code>java nio</code> 的实现而言简单易懂很多，但也引入了 channel、channelFuture 等新的概念</li>
+</ul>
+<h1 id="性能">
+  性能
+  <a class="heading-link" href="#%e6%80%a7%e8%83%bd">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<ul>
+<li>性能测试工具 <a href="https://github.com/rakyll/hey">https://github.com/rakyll/hey</a></li>
+<li>本文都是未经过优化的代码，全靠各自语言runtime以及包的默认配置&amp;优化，结果仅做参考，欢迎评论</li>
+<li>本文中java nio实现性能有很大的提高空间，侧面反映出java nio the right way真的挺难</li>
+</ul>
+<h2 id="简化对比表格">
+  简化对比表格
+  <a class="heading-link" href="#%e7%ae%80%e5%8c%96%e5%af%b9%e6%af%94%e8%a1%a8%e6%a0%bc">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>QPS</th>
+<th>P99 Latency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Go</td>
+<td>51044.4546</td>
+<td>99% in 0.0025 secs</td>
+</tr>
+<tr>
+<td>java io</td>
+<td>26102.2234</td>
+<td>99% in 0.0039 secs</td>
+</tr>
+<tr>
+<td>java nio</td>
+<td>5379.3392</td>
+<td>99% in 0.0153 secs</td>
+</tr>
+<tr>
+<td>netty</td>
+<td>44739.2500</td>
+<td>99% in 0.0020 secs</td>
+</tr>
+</tbody>
+</table>
+<h2 id="性能对比详细数据">
+  性能对比详细数据
+  <a class="heading-link" href="#%e6%80%a7%e8%83%bd%e5%af%b9%e6%af%94%e8%af%a6%e7%bb%86%e6%95%b0%e6%8d%ae">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="nx">hey</span> <span class="o">-</span><span class="nx">n</span> <span class="mi">100000</span> <span class="nx">http</span><span class="o">:</span><span class="c1">//localhost:8080/go
+</span><span class="c1"></span>
+<span class="nx">Summary</span><span class="o">:</span>
+  <span class="nx">Total</span><span class="o">:</span>        <span class="mf">1.9591</span> <span class="nx">secs</span>
+  <span class="nx">Slowest</span><span class="o">:</span>      <span class="mf">0.0369</span> <span class="nx">secs</span>
+  <span class="nx">Fastest</span><span class="o">:</span>      <span class="mf">0.0001</span> <span class="nx">secs</span>
+  <span class="nx">Average</span><span class="o">:</span>      <span class="mf">0.0010</span> <span class="nx">secs</span>
+  <span class="nx">Requests</span><span class="o">/</span><span class="nx">sec</span><span class="o">:</span> <span class="mf">51044.4546</span>
+
+  <span class="nx">Total</span> <span class="nx">data</span><span class="o">:</span>   <span class="mi">1300000</span> <span class="nx">bytes</span>
+  <span class="nx">Size</span><span class="o">/</span><span class="nx">request</span><span class="o">:</span> <span class="mi">13</span> <span class="nx">bytes</span>
+
+<span class="nx">Response</span> <span class="nx">time</span> <span class="nx">histogram</span><span class="o">:</span>
+  <span class="mf">0.000</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.004</span> <span class="p">[</span><span class="mi">99612</span><span class="p">]</span> <span class="o">|</span><span class="err">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</span>
+  <span class="mf">0.007</span> <span class="p">[</span><span class="mi">251</span><span class="p">]</span>   <span class="o">|</span>
+  <span class="mf">0.011</span> <span class="p">[</span><span class="mi">77</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.015</span> <span class="p">[</span><span class="mi">20</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.019</span> <span class="p">[</span><span class="mi">11</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.022</span> <span class="p">[</span><span class="mi">12</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.026</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.030</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.033</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.037</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span>     <span class="o">|</span>
+
+<span class="nx">Latency</span> <span class="nx">distribution</span><span class="o">:</span>
+  <span class="mi">10</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0006</span> <span class="nx">secs</span>
+  <span class="mi">25</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0008</span> <span class="nx">secs</span>
+  <span class="mi">50</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0009</span> <span class="nx">secs</span>
+  <span class="mi">75</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0010</span> <span class="nx">secs</span>
+  <span class="mi">90</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0012</span> <span class="nx">secs</span>
+  <span class="mi">95</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0015</span> <span class="nx">secs</span>
+  <span class="mi">99</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0025</span> <span class="nx">secs</span>
+
+<span class="nx">Details</span> <span class="p">(</span><span class="nx">average</span><span class="p">,</span> <span class="nx">fastest</span><span class="p">,</span> <span class="nx">slowest</span><span class="p">)</span><span class="o">:</span>
+  <span class="nx">DNS</span><span class="o">+</span><span class="nx">dialup</span><span class="o">:</span>   <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0001</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0369</span> <span class="nx">secs</span>
+  <span class="nx">DNS</span><span class="o">-</span><span class="nx">lookup</span><span class="o">:</span>   <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0028</span> <span class="nx">secs</span>
+  <span class="nx">req</span> <span class="nx">write</span><span class="o">:</span>    <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0314</span> <span class="nx">secs</span>
+  <span class="nx">resp</span> <span class="nx">wait</span><span class="o">:</span>    <span class="mf">0.0009</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0001</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0337</span> <span class="nx">secs</span>
+  <span class="nx">resp</span> <span class="nx">read</span><span class="o">:</span>    <span class="mf">0.0001</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0357</span> <span class="nx">secs</span>
+
+<span class="nx">Status</span> <span class="nx">code</span> <span class="nx">distribution</span><span class="o">:</span>
+  <span class="p">[</span><span class="mi">200</span><span class="p">]</span> <span class="mi">100000</span> <span class="nx">responses</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="nx">hey</span> <span class="o">-</span><span class="nx">n</span> <span class="mi">100000</span> <span class="nx">http</span><span class="o">:</span><span class="c1">//localhost:8080/javaio
+</span><span class="c1"></span>
+<span class="nx">Summary</span><span class="o">:</span>
+  <span class="nx">Total</span><span class="o">:</span>        <span class="mf">3.8311</span> <span class="nx">secs</span>
+  <span class="nx">Slowest</span><span class="o">:</span>      <span class="mf">0.0307</span> <span class="nx">secs</span>
+  <span class="nx">Fastest</span><span class="o">:</span>      <span class="mf">0.0001</span> <span class="nx">secs</span>
+  <span class="nx">Average</span><span class="o">:</span>      <span class="mf">0.0019</span> <span class="nx">secs</span>
+  <span class="nx">Requests</span><span class="o">/</span><span class="nx">sec</span><span class="o">:</span> <span class="mf">26102.2234</span>
+
+  <span class="nx">Total</span> <span class="nx">data</span><span class="o">:</span>   <span class="mi">1100000</span> <span class="nx">bytes</span>
+  <span class="nx">Size</span><span class="o">/</span><span class="nx">request</span><span class="o">:</span> <span class="mi">11</span> <span class="nx">bytes</span>
+
+<span class="nx">Response</span> <span class="nx">time</span> <span class="nx">histogram</span><span class="o">:</span>
+  <span class="mf">0.000</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.003</span> <span class="p">[</span><span class="mi">96205</span><span class="p">]</span> <span class="o">|</span><span class="err">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</span>
+  <span class="mf">0.006</span> <span class="p">[</span><span class="mi">3664</span><span class="p">]</span>  <span class="o">|</span><span class="err">■■</span>
+  <span class="mf">0.009</span> <span class="p">[</span><span class="mi">90</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.012</span> <span class="p">[</span><span class="mi">15</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.015</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.018</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.022</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.025</span> <span class="p">[</span><span class="mi">9</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.028</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.031</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>     <span class="o">|</span>
+
+<span class="nx">Latency</span> <span class="nx">distribution</span><span class="o">:</span>
+  <span class="mi">10</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0011</span> <span class="nx">secs</span>
+  <span class="mi">25</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0015</span> <span class="nx">secs</span>
+  <span class="mi">50</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0019</span> <span class="nx">secs</span>
+  <span class="mi">75</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0022</span> <span class="nx">secs</span>
+  <span class="mi">90</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0027</span> <span class="nx">secs</span>
+  <span class="mi">95</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0030</span> <span class="nx">secs</span>
+  <span class="mi">99</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0039</span> <span class="nx">secs</span>
+
+<span class="nx">Details</span> <span class="p">(</span><span class="nx">average</span><span class="p">,</span> <span class="nx">fastest</span><span class="p">,</span> <span class="nx">slowest</span><span class="p">)</span><span class="o">:</span>
+  <span class="nx">DNS</span><span class="o">+</span><span class="nx">dialup</span><span class="o">:</span>   <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0001</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0307</span> <span class="nx">secs</span>
+  <span class="nx">DNS</span><span class="o">-</span><span class="nx">lookup</span><span class="o">:</span>   <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0021</span> <span class="nx">secs</span>
+  <span class="nx">req</span> <span class="nx">write</span><span class="o">:</span>    <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0007</span> <span class="nx">secs</span>
+  <span class="nx">resp</span> <span class="nx">wait</span><span class="o">:</span>    <span class="mf">0.0015</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0001</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0251</span> <span class="nx">secs</span>
+  <span class="nx">resp</span> <span class="nx">read</span><span class="o">:</span>    <span class="mf">0.0004</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0022</span> <span class="nx">secs</span>
+
+<span class="nx">Status</span> <span class="nx">code</span> <span class="nx">distribution</span><span class="o">:</span>
+  <span class="p">[</span><span class="mi">200</span><span class="p">]</span> <span class="mi">100000</span> <span class="nx">responses</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="nx">hey</span> <span class="o">-</span><span class="nx">n</span> <span class="mi">100000</span> <span class="nx">http</span><span class="o">:</span><span class="c1">//localhost:8080/javanio
+</span><span class="c1"></span>
+<span class="nx">Summary</span><span class="o">:</span>
+  <span class="nx">Total</span><span class="o">:</span>        <span class="mf">18.5896</span> <span class="nx">secs</span>
+  <span class="nx">Slowest</span><span class="o">:</span>      <span class="mf">0.1030</span> <span class="nx">secs</span>
+  <span class="nx">Fastest</span><span class="o">:</span>      <span class="mf">0.0007</span> <span class="nx">secs</span>
+  <span class="nx">Average</span><span class="o">:</span>      <span class="mf">0.0093</span> <span class="nx">secs</span>
+  <span class="nx">Requests</span><span class="o">/</span><span class="nx">sec</span><span class="o">:</span> <span class="mf">5379.3392</span>
+
+<span class="nx">Response</span> <span class="nx">time</span> <span class="nx">histogram</span><span class="o">:</span>
+  <span class="mf">0.001</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.011</span> <span class="p">[</span><span class="mi">91109</span><span class="p">]</span> <span class="o">|</span><span class="err">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</span>
+  <span class="mf">0.021</span> <span class="p">[</span><span class="mi">8229</span><span class="p">]</span>  <span class="o">|</span><span class="err">■■■■</span>
+  <span class="mf">0.031</span> <span class="p">[</span><span class="mi">11</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.042</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.052</span> <span class="p">[</span><span class="mi">50</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.062</span> <span class="p">[</span><span class="mi">400</span><span class="p">]</span>   <span class="o">|</span>
+  <span class="mf">0.072</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.083</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.093</span> <span class="p">[</span><span class="mi">34</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.103</span> <span class="p">[</span><span class="mi">166</span><span class="p">]</span>   <span class="o">|</span>
+
+<span class="nx">Latency</span> <span class="nx">distribution</span><span class="o">:</span>
+  <span class="mi">10</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0074</span> <span class="nx">secs</span>
+  <span class="mi">25</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0079</span> <span class="nx">secs</span>
+  <span class="mi">50</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0087</span> <span class="nx">secs</span>
+  <span class="mi">75</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0096</span> <span class="nx">secs</span>
+  <span class="mi">90</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0108</span> <span class="nx">secs</span>
+  <span class="mi">95</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0118</span> <span class="nx">secs</span>
+  <span class="mi">99</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0153</span> <span class="nx">secs</span>
+
+<span class="nx">Details</span> <span class="p">(</span><span class="nx">average</span><span class="p">,</span> <span class="nx">fastest</span><span class="p">,</span> <span class="nx">slowest</span><span class="p">)</span><span class="o">:</span>
+  <span class="nx">DNS</span><span class="o">+</span><span class="nx">dialup</span><span class="o">:</span>   <span class="mf">0.0061</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0007</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.1030</span> <span class="nx">secs</span>
+  <span class="nx">DNS</span><span class="o">-</span><span class="nx">lookup</span><span class="o">:</span>   <span class="mf">0.0004</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0065</span> <span class="nx">secs</span>
+  <span class="nx">req</span> <span class="nx">write</span><span class="o">:</span>    <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0033</span> <span class="nx">secs</span>
+  <span class="nx">resp</span> <span class="nx">wait</span><span class="o">:</span>    <span class="mf">0.0031</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0001</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0967</span> <span class="nx">secs</span>
+  <span class="nx">resp</span> <span class="nx">read</span><span class="o">:</span>    <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0483</span> <span class="nx">secs</span>
+
+<span class="nx">Status</span> <span class="nx">code</span> <span class="nx">distribution</span><span class="o">:</span>
+  <span class="p">[</span><span class="mi">200</span><span class="p">]</span> <span class="mi">100000</span> <span class="nx">responses</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-jsx" data-lang="jsx"><span class="nx">hey</span> <span class="o">-</span><span class="nx">n</span> <span class="mi">100000</span> <span class="nx">http</span><span class="o">:</span><span class="c1">//localhost:8080/netty
+</span><span class="c1"></span>
+<span class="nx">Summary</span><span class="o">:</span>
+  <span class="nx">Total</span><span class="o">:</span>        <span class="mf">2.2352</span> <span class="nx">secs</span>
+  <span class="nx">Slowest</span><span class="o">:</span>      <span class="mf">0.0223</span> <span class="nx">secs</span>
+  <span class="nx">Fastest</span><span class="o">:</span>      <span class="mf">0.0001</span> <span class="nx">secs</span>
+  <span class="nx">Average</span><span class="o">:</span>      <span class="mf">0.0011</span> <span class="nx">secs</span>
+  <span class="nx">Requests</span><span class="o">/</span><span class="nx">sec</span><span class="o">:</span> <span class="mf">44739.2500</span>
+
+  <span class="nx">Total</span> <span class="nx">data</span><span class="o">:</span>   <span class="mi">1100000</span> <span class="nx">bytes</span>
+  <span class="nx">Size</span><span class="o">/</span><span class="nx">request</span><span class="o">:</span> <span class="mi">11</span> <span class="nx">bytes</span>
+
+<span class="nx">Response</span> <span class="nx">time</span> <span class="nx">histogram</span><span class="o">:</span>
+  <span class="mf">0.000</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.002</span> <span class="p">[</span><span class="mi">99538</span><span class="p">]</span> <span class="o">|</span><span class="err">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■</span>
+  <span class="mf">0.005</span> <span class="p">[</span><span class="mi">409</span><span class="p">]</span>   <span class="o">|</span>
+  <span class="mf">0.007</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.009</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.011</span> <span class="p">[</span><span class="mi">11</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.013</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.016</span> <span class="p">[</span><span class="mi">11</span><span class="p">]</span>    <span class="o">|</span>
+  <span class="mf">0.018</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.020</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span>     <span class="o">|</span>
+  <span class="mf">0.022</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span>    <span class="o">|</span>
+
+<span class="nx">Latency</span> <span class="nx">distribution</span><span class="o">:</span>
+  <span class="mi">10</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0009</span> <span class="nx">secs</span>
+  <span class="mi">25</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0010</span> <span class="nx">secs</span>
+  <span class="mi">50</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0011</span> <span class="nx">secs</span>
+  <span class="mi">75</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0012</span> <span class="nx">secs</span>
+  <span class="mi">90</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0013</span> <span class="nx">secs</span>
+  <span class="mi">95</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0014</span> <span class="nx">secs</span>
+  <span class="mi">99</span><span class="o">%</span> <span class="k">in</span> <span class="mf">0.0020</span> <span class="nx">secs</span>
+
+<span class="nx">Details</span> <span class="p">(</span><span class="nx">average</span><span class="p">,</span> <span class="nx">fastest</span><span class="p">,</span> <span class="nx">slowest</span><span class="p">)</span><span class="o">:</span>
+  <span class="nx">DNS</span><span class="o">+</span><span class="nx">dialup</span><span class="o">:</span>   <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0001</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0223</span> <span class="nx">secs</span>
+  <span class="nx">DNS</span><span class="o">-</span><span class="nx">lookup</span><span class="o">:</span>   <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0025</span> <span class="nx">secs</span>
+  <span class="nx">req</span> <span class="nx">write</span><span class="o">:</span>    <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0018</span> <span class="nx">secs</span>
+  <span class="nx">resp</span> <span class="nx">wait</span><span class="o">:</span>    <span class="mf">0.0010</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0001</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0149</span> <span class="nx">secs</span>
+  <span class="nx">resp</span> <span class="nx">read</span><span class="o">:</span>    <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0000</span> <span class="nx">secs</span><span class="p">,</span> <span class="mf">0.0023</span> <span class="nx">secs</span>
+
+<span class="nx">Status</span> <span class="nx">code</span> <span class="nx">distribution</span><span class="o">:</span>
+  <span class="p">[</span><span class="mi">200</span><span class="p">]</span> <span class="mi">100000</span> <span class="nx">responses</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="参考">
+  参考
+  <a class="heading-link" href="#%e5%8f%82%e8%80%83">
+    <i class="fa fa-link" aria-hidden="true"></i>
+  </a>
+</h1>
+<ul>
+<li><a href="https://cacm.acm.org/magazines/2022/5/260357-the-go-programming-language-and-environment/fulltext">https://cacm.acm.org/magazines/2022/5/260357-the-go-programming-language-and-environment/fulltext</a></li>
+<li><a href="https://github.com/netty/netty/blob/4.1/example/src/main/java/io/netty/example/http/helloworld/HttpHelloWorldServer.java">https://github.com/netty/netty/blob/4.1/example/src/main/java/io/netty/example/http/helloworld/HttpHelloWorldServer.java</a></li>
+<li><a href="https://stackoverflow.com/questions/3732109/simple-http-server-in-java-using-only-java-se-api">https://stackoverflow.com/questions/3732109/simple-http-server-in-java-using-only-java-se-api</a></li>
+</ul>
+
+      </div>
+
+
+      <footer>
+        
+
+
+        
+        
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      
+  <footer class="footer">
+    <section class="container">
+      
+      
+        ©
+        
+        2022
+         何晨 
+      
+      
+         · 
+        Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+      
+      
+    </section>
+  </footer>
+
+
+    </main>
+
+    
+      
+      <script src="/js/coder.min.03b17769f4f91ae35667e1f2a1ca8c16f50562576cf90ff32b3179926914daa5.js" integrity="sha256-A7F3afT5GuNWZ&#43;HyocqMFvUFYlds&#43;Q/zKzF5kmkU2qU="></script>
+    
+
+    
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-57183016-8', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+  </body>
+
+</html>
