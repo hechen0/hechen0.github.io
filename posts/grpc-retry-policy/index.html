@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
+    <title>
+  从gRPC的重试策略说起 · 
+</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Language" content="en">
-    <meta name="color-scheme" content="light dark">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 
-    
 
-    <meta name="author" content="何晨">
-    <meta name="description" content="如何正确的重试">
-    <meta name="keywords" content="博客,developer,后端技术,cs,computer science">
 
-    <meta name="twitter:card" content="summary"/>
+
+<meta name="author" content="何晨">
+<meta name="description" content="如何正确的重试">
+<meta name="keywords" content="博客,developer,后端技术,cs,computer science">
+
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="从gRPC的重试策略说起"/>
 <meta name="twitter:description" content="如何正确的重试"/>
 
-    <meta property="og:title" content="从gRPC的重试策略说起" />
+<meta property="og:title" content="从gRPC的重试策略说起" />
 <meta property="og:description" content="如何正确的重试" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://hechen0.com/posts/grpc-retry-policy/" /><meta property="article:section" content="posts" />
@@ -26,47 +28,54 @@
 
 
 
-    <title>
-  从gRPC的重试策略说起 · 
-</title>
 
-    
-      <link rel="canonical" href="http://hechen0.com/posts/grpc-retry-policy/">
-    
+<link rel="canonical" href="http://hechen0.com/posts/grpc-retry-policy/">
 
-    <link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
-      
-      
-      <link rel="stylesheet" href="/css/coder.min.708686f8ab8176e91d44fcbe488a0fe0333b94f405cf18a52383d67ba22f0ccb.css" integrity="sha256-cIaG&#43;KuBdukdRPy&#43;SIoP4DM7lPQFzxilI4PWe6IvDMs=" crossorigin="anonymous" media="screen" />
-    
+<link rel="preload" href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin>
 
-    
 
-    
+  
+  
+  <link rel="stylesheet" href="/css/coder.min.0fa2dc75ed1b76894ac0e062b10a6c4730daa745096fa120114b290ed8a48788.css" integrity="sha256-D6Lcde0bdolKwOBisQpsRzDap0UJb6EgEUspDtikh4g=" crossorigin="anonymous" media="screen" />
 
-    
 
-    
 
-    <link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
 
-    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
 
-    
 
-    <meta name="generator" content="Hugo 0.91.0" />
+
+
+ 
+
+
+
+
+<link rel="icon" type="image/png" href="/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon" href="/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
   </head>
 
+
+
+
+<body class="preload-transitions colorscheme-light">
   
-  
-  <body class="preload-transitions colorscheme-light"
-        onload=""
-  >
-    
 <div class="float-container">
     <a id="dark-mode-toggle" class="colorscheme-toggle">
         <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
@@ -74,8 +83,8 @@
 </div>
 
 
-    <main class="wrapper">
-      <nav class="navigation">
+  <main class="wrapper">
+    <nav class="navigation">
   <section class="container">
     <a class="navigation-title" href="/">
       
@@ -104,8 +113,8 @@
 </nav>
 
 
-      <div class="content">
-        
+    <div class="content">
+      
   <section class="container post">
     <article>
       <header>
@@ -120,13 +129,13 @@
           <div class="date">
             <span class="posted-on">
               <i class="fa fa-calendar" aria-hidden="true"></i>
-              <time datetime='2020-03-28T09:58:04&#43;08:00'>
+              <time datetime="2020-03-28T09:58:04&#43;08:00">
                 March 28, 2020
               </time>
             </span>
             <span class="reading-time">
               <i class="fa fa-clock-o" aria-hidden="true"></i>
-              One-minute read
+              2-minute read
             </span>
           </div>
           
@@ -138,7 +147,7 @@
         </div>
       </header>
 
-      <div>
+      <div class="post-content">
         
         <blockquote>
 <p>本文首发在 <a href="hechen0.com">技术成长之道</a> 博客，访问 <a href="hechen0.com">hechen0.com</a> 查看更多，或者微信搜索「技术成长之道」关注我的公众号，或者扫描下方二维码关注
@@ -148,7 +157,8 @@
 <h1 id="本文让你了解">
   本文让你了解
   <a class="heading-link" href="#%e6%9c%ac%e6%96%87%e8%ae%a9%e4%bd%a0%e4%ba%86%e8%a7%a3">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h1>
 <ol>
@@ -161,7 +171,8 @@
 <h1 id="1-重试解决什么问题">
   1. 重试解决什么问题
   <a class="heading-link" href="#1-%e9%87%8d%e8%af%95%e8%a7%a3%e5%86%b3%e4%bb%80%e4%b9%88%e9%97%ae%e9%a2%98">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h1>
 <p>如今的互联网服务早已不是单体应用，而是由若干个模块组成的微服务，每个模块可以进行单独的扩容、缩容，独立上线部署等等；模块与模块之间通过网络进行联通。我们的应用必须对网络错误进行妥善的处理。从发生时长上而言，网络错误可以分为两类：</p>
@@ -173,7 +184,8 @@
 <h1 id="2-短时间故障的产生原因">
   2. 短时间故障的产生原因
   <a class="heading-link" href="#2-%e7%9f%ad%e6%97%b6%e9%97%b4%e6%95%85%e9%9a%9c%e7%9a%84%e4%ba%a7%e7%94%9f%e5%8e%9f%e5%9b%a0">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h1>
 <p>在任何环节下应用都会有可能产生短时故障。即使是在没有网络参与的应用里，软件bug或硬件故障或一次意外断电都会造成短时故障。短时故障是常态，想做到高可用不是靠避免这些故障的发生，而是去思考短时故障发生之后的应对策略。</p>
@@ -187,7 +199,8 @@
 <h1 id="3-处理短时故障的挑战">
   3. 处理短时故障的挑战
   <a class="heading-link" href="#3-%e5%a4%84%e7%90%86%e7%9f%ad%e6%97%b6%e6%95%85%e9%9a%9c%e7%9a%84%e6%8c%91%e6%88%98">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h1>
 <p>短时故障处理以下两点挑战</p>
@@ -198,7 +211,8 @@
 <h1 id="4-重试分为几步">
   4. 重试分为几步
   <a class="heading-link" href="#4-%e9%87%8d%e8%af%95%e5%88%86%e4%b8%ba%e5%87%a0%e6%ad%a5">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h1>
 <ol>
@@ -210,7 +224,8 @@
 <h2 id="41-常见的重试时间间隔策略">
   4.1 常见的重试时间间隔策略
   <a class="heading-link" href="#41-%e5%b8%b8%e8%a7%81%e7%9a%84%e9%87%8d%e8%af%95%e6%97%b6%e9%97%b4%e9%97%b4%e9%9a%94%e7%ad%96%e7%95%a5">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h2>
 <ol>
@@ -223,27 +238,31 @@
 <h1 id="5-grpc是如何进行重试的">
   5. gRPC是如何进行重试的
   <a class="heading-link" href="#5-grpc%e6%98%af%e5%a6%82%e4%bd%95%e8%bf%9b%e8%a1%8c%e9%87%8d%e8%af%95%e7%9a%84">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h1>
 <h2 id="51-如何感知错误">
   5.1 如何感知错误
   <a class="heading-link" href="#51-%e5%a6%82%e4%bd%95%e6%84%9f%e7%9f%a5%e9%94%99%e8%af%af">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h2>
 <p>gRPC有自己一套类似HTTP status code的错误码，每个错误码都是个字符串，如 INTERNAL、ABORTED、UNAVAILABLE。</p>
 <h2 id="52-如何决策">
   5.2 如何决策
   <a class="heading-link" href="#52-%e5%a6%82%e4%bd%95%e5%86%b3%e7%ad%96">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h2>
 <p>对于哪些错误可以重试是可配置的。通常而言，只有那些明确标识对端没有接收处理请求的错误才需要被重试，比如对端返回一个 UNAVAILABLE 错误，这代表对端的服务目前处于不可用状态。但也可以配置一个更加激进的重试策略，但关键是需要保证这些被重试的gRPC请求是幂等的，这个需要服务使用者和提供者共同协商出一个可以被重试的错误集合。</p>
 <h2 id="53-重试策略">
   5.3 重试策略
   <a class="heading-link" href="#53-%e9%87%8d%e8%af%95%e7%ad%96%e7%95%a5">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h2>
 <p>gRPC的重试策略分为两类</p>
@@ -258,7 +277,8 @@
 <h3 id="重试之时间策略">
   重试之时间策略
   <a class="heading-link" href="#%e9%87%8d%e8%af%95%e4%b9%8b%e6%97%b6%e9%97%b4%e7%ad%96%e7%95%a5">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h3>
 <p>gPRC用了上面我们提到的 <strong>指数避退+随机间隔</strong> 组合起来的方式进行重试，<a href="https://github.com/grpc/grpc/blob/master/doc/connection-backoff.md">详见这里</a></p>
@@ -277,18 +297,18 @@
 </span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="cm">/* 伪码 */</span>
-
-<span class="n">ConnectWithBackoff</span><span class="p">()</span>
-  <span class="n">current_backoff</span> <span class="o">=</span> <span class="n">INITIAL_BACKOFF</span>
-  <span class="n">current_deadline</span> <span class="o">=</span> <span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">INITIAL_BACKOFF</span>
-  <span class="k">while</span> <span class="p">(</span><span class="n">TryConnect</span><span class="p">(</span><span class="n">Max</span><span class="p">(</span><span class="n">current_deadline</span><span class="p">,</span> <span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">MIN_CONNECT_TIMEOUT</span><span class="p">))</span>
-         <span class="o">!=</span> <span class="n">SUCCESS</span><span class="p">)</span>
-    <span class="n">SleepUntil</span><span class="p">(</span><span class="n">current_deadline</span><span class="p">)</span>
-    <span class="n">current_backoff</span> <span class="o">=</span> <span class="n">Min</span><span class="p">(</span><span class="n">current_backoff</span> <span class="o">*</span> <span class="n">MULTIPLIER</span><span class="p">,</span> <span class="n">MAX_BACKOFF</span><span class="p">)</span>
-    <span class="n">current_deadline</span> <span class="o">=</span> <span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">current_backoff</span> <span class="o">+</span>
-      <span class="n">UniformRandom</span><span class="p">(</span><span class="o">-</span><span class="n">JITTER</span> <span class="o">*</span> <span class="n">current_backoff</span><span class="p">,</span> <span class="n">JITTER</span> <span class="o">*</span> <span class="n">current_backoff</span><span class="p">)</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cm">/* 伪码 */</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nf">ConnectWithBackoff</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="n">current_backoff</span> <span class="o">=</span> <span class="n">INITIAL_BACKOFF</span>
+</span></span><span class="line"><span class="cl">  <span class="n">current_deadline</span> <span class="o">=</span> <span class="nf">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">INITIAL_BACKOFF</span>
+</span></span><span class="line"><span class="cl">  <span class="k">while</span> <span class="p">(</span><span class="nf">TryConnect</span><span class="p">(</span><span class="nf">Max</span><span class="p">(</span><span class="n">current_deadline</span><span class="p">,</span> <span class="nf">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">MIN_CONNECT_TIMEOUT</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">         <span class="o">!=</span> <span class="n">SUCCESS</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">SleepUntil</span><span class="p">(</span><span class="n">current_deadline</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">current_backoff</span> <span class="o">=</span> <span class="nf">Min</span><span class="p">(</span><span class="n">current_backoff</span> <span class="o">*</span> <span class="n">MULTIPLIER</span><span class="p">,</span> <span class="n">MAX_BACKOFF</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">current_deadline</span> <span class="o">=</span> <span class="nf">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">current_backoff</span> <span class="o">+</span>
+</span></span><span class="line"><span class="cl">      <span class="nf">UniformRandom</span><span class="p">(</span><span class="o">-</span><span class="n">JITTER</span> <span class="o">*</span> <span class="n">current_backoff</span><span class="p">,</span> <span class="n">JITTER</span> <span class="o">*</span> <span class="n">current_backoff</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>上面的算法里有这么几个关键的参数</p>
 <ol>
@@ -302,7 +322,8 @@
 <h3 id="重试之次数策略">
   重试之次数策略
   <a class="heading-link" href="#%e9%87%8d%e8%af%95%e4%b9%8b%e6%ac%a1%e6%95%b0%e7%ad%96%e7%95%a5">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h3>
 <p>上面的算法里面没有关于次数的限制，gRPC中的最大重试次数是可配置的，硬限制的最大值为<a href="https://github.com/grpc/proposal/blob/master/A6-client-retries.md">5次</a>，设置这个硬限制的目的我想主要还是出于对对端服务的保护，避免一些人为的错误。</p>
@@ -313,7 +334,8 @@
 <h3 id="对冲之时间策略">
   对冲之时间策略
   <a class="heading-link" href="#%e5%af%b9%e5%86%b2%e4%b9%8b%e6%97%b6%e9%97%b4%e7%ad%96%e7%95%a5">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h3>
 <p>对冲策略里面，请求是按照如下逻辑发出的：</p>
@@ -327,14 +349,16 @@
 <h3 id="对冲之次数策略">
   对冲之次数策略
   <a class="heading-link" href="#%e5%af%b9%e5%86%b2%e4%b9%8b%e6%ac%a1%e6%95%b0%e7%ad%96%e7%95%a5">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h3>
 <p>次数和上面重试是一样的限制，都是5次。</p>
 <h3 id="其它需要注意的问题">
   其它需要注意的问题
   <a class="heading-link" href="#%e5%85%b6%e5%ae%83%e9%9c%80%e8%a6%81%e6%b3%a8%e6%84%8f%e7%9a%84%e9%97%ae%e9%a2%98">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h3>
 <ol>
@@ -344,7 +368,8 @@
 <h2 id="54-重试失败">
   5.4 重试失败
   <a class="heading-link" href="#54-%e9%87%8d%e8%af%95%e5%a4%b1%e8%b4%a5">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h2>
 <p>当然不能一直重试，对于重试失败，gRPC有以下的策略以顾全大局，对于每个server，客户端都可配置一个针对该server的限制策略如下：</p>
@@ -356,11 +381,11 @@
 </span><span class="lnt">4
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="s2">&#34;retryThrottling&#34;</span><span class="err">:</span> <span class="p">{</span>
-  <span class="nt">&#34;maxTokens&#34;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-  <span class="nt">&#34;tokenRatio&#34;</span><span class="p">:</span> <span class="mf">0.1</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="s2">&#34;retryThrottling&#34;</span><span class="err">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;maxTokens&#34;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;tokenRatio&#34;</span><span class="p">:</span> <span class="mf">0.1</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>对于每个server，gRPC的客户端都维护了一个 token_count 变量，变量初始值为配置的 maxTokens 值，每次RPC请求都会影响这个 token_count 变量值：</p>
 <ol>
@@ -372,7 +397,8 @@
 <h1 id="总结">
   总结
   <a class="heading-link" href="#%e6%80%bb%e7%bb%93">
-    <i class="fa fa-link" aria-hidden="true"></i>
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
   </a>
 </h1>
 <p>本文从问题出发，介绍『重试』这种简单而又有效的故障处理手段，希望能对大家有所帮助，有任何问题欢迎在评论区留言交流，或扫描二维码/微信搜索『技术成长之道』关注公众号后留言私信。</p>
@@ -387,67 +413,74 @@
         
         
         
+        
       </footer>
     </article>
 
     
   </section>
 
-      </div>
+    </div>
 
-      
-  <footer class="footer">
-    <section class="container">
-      
-      
-        ©
-        
-        2022
-         何晨 
-      
-      
-         · 
-        Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
-      
-      
-    </section>
-  </footer>
-
-
-    </main>
-
+    <footer class="footer">
+  <section class="container">
+    ©
     
-      
-      <script src="/js/coder.min.03b17769f4f91ae35667e1f2a1ca8c16f50562576cf90ff32b3179926914daa5.js" integrity="sha256-A7F3afT5GuNWZ&#43;HyocqMFvUFYlds&#43;Q/zKzF5kmkU2qU="></script>
+    2023
+     何晨 
+    ·
     
+    Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
 
-    
+  </main>
 
-    
-<script type="application/javascript">
+  
+
+  
+  
+  <script src="/js/coder.min.6ae284be93d2d19dad1f02b0039508d9aab3180a12a06dcc71b0b0ef7825a317.js" integrity="sha256-auKEvpPS0Z2tHwKwA5UI2aqzGAoSoG3McbCw73gloxc="></script>
+  
+
+  
+
+  
+
+
+  
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7GEY7TGL1K"></script>
+<script>
 var doNotTrack = false;
 if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-57183016-8', 'auto');
-	
-	ga('send', 'pageview');
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'G-7GEY7TGL1K', { 'anonymize_ip': false });
 }
 </script>
 
-    
 
-    
+  
 
-    
+  
 
-    
+  
 
-    
+  
 
-    
-  </body>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</body>
 
 </html>

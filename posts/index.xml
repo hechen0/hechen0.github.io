@@ -12,9 +12,9 @@
       <pubDate>Sat, 14 May 2022 22:01:17 +0800</pubDate>
       
       <guid>http://hechen0.com/posts/java_network_programming/</guid>
-      <description>摘要    通过hello world HTTP server示例，对比go、java io、java nio、netty网络编程，简单入个门
-Hello World    本节通过hello world http server代码示例对比四者的开发效率、性能
-代码实现    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15  // Go package main import ( &amp;#34;fmt&amp;#34; &amp;#34;net/http&amp;#34; ) func main(){ http.ListenAndServe(&amp;#34;:8080&amp;#34;, http.HandlerFunc(hello)) } func hello(w http.ResponseWriter, req *http.Request) { fmt.Fprintf(w, &amp;#34;hello, world\n&amp;#34;) }   1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21  // java io public class IOHelloWorldServer { public static void main(String[] args) throws Exception { HttpServer server = HttpServer.</description>
+      <description>摘要 Link to heading 通过hello world HTTP server示例，对比go、java io、java nio、netty网络编程，简单入个门
+Hello World Link to heading 本节通过hello world http server代码示例对比四者的开发效率、性能
+代码实现 Link to heading 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 // Go package main import ( &amp;#34;fmt&amp;#34; &amp;#34;net/http&amp;#34; ) func main(){ http.ListenAndServe(&amp;#34;:8080&amp;#34;, http.HandlerFunc(hello)) } func hello(w http.ResponseWriter, req *http.Request) { fmt.Fprintf(w, &amp;#34;hello, world\n&amp;#34;) } 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 // java io public class IOHelloWorldServer { public static void main(String[] args) throws Exception { HttpServer server = HttpServer.</description>
     </item>
     
     <item>
@@ -23,10 +23,10 @@ Hello World    本节通过hello world http server代码示例对比四者的开
       <pubDate>Wed, 17 Feb 2021 11:14:59 +0800</pubDate>
       
       <guid>http://hechen0.com/posts/hbase/</guid>
-      <description>背景    Migrating Messenger storage to optimize performance - Facebook Engineering
+      <description>背景 Link to heading Migrating Messenger storage to optimize performance - Facebook Engineering
 HBASE是什么
- Apache HBase™ is the Hadoop database, a distributed, scalable, big data store.
-  Use Apache HBase™ when you need random, realtime read/write access to your Big Data. This project&amp;rsquo;s goal is the hosting of very large tables &amp;ndash; billions of rows X millions of columns &amp;ndash; atop clusters of commodity hardware. Apache HBase is an open-source, distributed, versioned, non-relational database modeled after Google&amp;rsquo;s Bigtable: A Distributed Storage System for Structured Data by Chang et al.</description>
+Apache HBase™ is the Hadoop database, a distributed, scalable, big data store.
+Use Apache HBase™ when you need random, realtime read/write access to your Big Data. This project&amp;rsquo;s goal is the hosting of very large tables &amp;ndash; billions of rows X millions of columns &amp;ndash; atop clusters of commodity hardware. Apache HBase is an open-source, distributed, versioned, non-relational database modeled after Google&amp;rsquo;s Bigtable: A Distributed Storage System for Structured Data by Chang et al.</description>
     </item>
     
     <item>
@@ -35,10 +35,10 @@ HBASE是什么
       <pubDate>Wed, 17 Feb 2021 10:58:28 +0800</pubDate>
       
       <guid>http://hechen0.com/posts/leveldb-notes/</guid>
-      <description>levedb是什么    官方解释
- LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.
- 解决的问题    写多余读的场景
-提供的核心能力    具备的能力     键值是任意字节数组 按key有序&amp;amp;可自定义排序方法 核心操作 Put，Get，Delete 批量操作 快照 遍历 数据压缩 对外交互通过虚拟层进行，用户可以自定义操作系统层功能（External activity (file system operations etc.) is relayed through a virtual interface so users can customize the operating system interactions.）  不具备的能力     非SQL数据库，没有关系数据模型，不支持SQL查询，不支持索引 只支持单进程模式（多线程） 只是个lib库，没有现成可以使用的client-server，需要自己封装  资源结构依赖    lib库，需要和其它系统配合使用，可以参考bigtable</description>
+      <description>levedb是什么 Link to heading 官方解释
+LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.
+解决的问题 Link to heading 写多余读的场景
+提供的核心能力 Link to heading 具备的能力 Link to heading 键值是任意字节数组 按key有序&amp;amp;可自定义排序方法 核心操作 Put，Get，Delete 批量操作 快照 遍历 数据压缩 对外交互通过虚拟层进行，用户可以自定义操作系统层功能（External activity (file system operations etc.) is relayed through a virtual interface so users can customize the operating system interactions.） 不具备的能力 Link to heading 非SQL数据库，没有关系数据模型，不支持SQL查询，不支持索引 只支持单进程模式（多线程） 只是个lib库，没有现成可以使用的client-server，需要自己封装 资源结构依赖 Link to heading lib库，需要和其它系统配合使用，可以参考bigtable</description>
     </item>
     
     <item>
@@ -47,9 +47,9 @@ HBASE是什么
       <pubDate>Tue, 16 Feb 2021 21:06:28 +0800</pubDate>
       
       <guid>http://hechen0.com/posts/bigtable-notes/</guid>
-      <description>abstract 摘要    略
-introduction 介绍    略
-Data Model 数据模型    简述     BigTable是一个稀疏、分布式、持久化、多维度的有序Map map的key含三个维度：row key、column key及时间戳，map的value是任意字节数组 整个Map结构： (row:string, column:string, time:int64) → string 如何得出这个结构的？潜在的使用需求分析  rows     原子操作在row key这个维度，无论其中有多少个columns在读写，降低实现&amp;amp;使用复杂度 row key 排序，按照 lexicographic order 字典序 多个连续的row组成一个row range，为一个tablet，一个table被动态分割成多个tablet，tablet是系统分布和负载均衡的单元  client可以根据排序特性设计row key以提供更好的局部性，因为排序上越靠近的row key，物理存储位置在一起的可能性会越高，因此范围读取速度也会更快    Column Families     相同column key会被分到同一组，成为column families, 是一个访问控制单元 basic unit of access control 在同一个column familiy的column key通常数据类型相同，会一起压缩 column family必须提前创建，为啥呢  控制总 column families 数量 在百个级别 减少运维中的column family变更 与此相对应的是，column key的数量不受限制   column key的格式为 family:qualifier, family必须是可打印的字符，但qualifier可以是任意字节 访问控制(access control)以及disk、memory的账单计费等，都在 column-family 这一层；通过访问控制，可以管理不同类型的数据，有的可以新增base数据，有的只能读base数据，然后基于base数据再新增派生的数据等等  Timestamps     每个cell（由row key和column key定位）中可以存储一份数据的多个版本，通过时间戳进行索引 timestamp可以由bigtable设置，也可以由客户端指定 版本按timestamp从大到小排序，版本大的先读取 为了减小版本维护成本，有两种 column-family 维度的 版本回收策略  客户端可以指定只保留最近N个版本 或者自定义一个方法？足够新的数据才保存（比如近7天的版本）    API 提供的API    略</description>
+      <description>abstract 摘要 Link to heading 略
+introduction 介绍 Link to heading 略
+Data Model 数据模型 Link to heading 简述 Link to heading BigTable是一个稀疏、分布式、持久化、多维度的有序Map map的key含三个维度：row key、column key及时间戳，map的value是任意字节数组 整个Map结构： (row:string, column:string, time:int64) → string 如何得出这个结构的？潜在的使用需求分析 rows Link to heading 原子操作在row key这个维度，无论其中有多少个columns在读写，降低实现&amp;amp;使用复杂度 row key 排序，按照 lexicographic order 字典序 多个连续的row组成一个row range，为一个tablet，一个table被动态分割成多个tablet，tablet是系统分布和负载均衡的单元 client可以根据排序特性设计row key以提供更好的局部性，因为排序上越靠近的row key，物理存储位置在一起的可能性会越高，因此范围读取速度也会更快 Column Families Link to heading 相同column key会被分到同一组，成为column families, 是一个访问控制单元 basic unit of access control 在同一个column familiy的column key通常数据类型相同，会一起压缩 column family必须提前创建，为啥呢 控制总 column families 数量 在百个级别 减少运维中的column family变更 与此相对应的是，column key的数量不受限制 column key的格式为 family:qualifier, family必须是可打印的字符，但qualifier可以是任意字节 访问控制(access control)以及disk、memory的账单计费等，都在 column-family 这一层；通过访问控制，可以管理不同类型的数据，有的可以新增base数据，有的只能读base数据，然后基于base数据再新增派生的数据等等 Timestamps Link to heading 每个cell（由row key和column key定位）中可以存储一份数据的多个版本，通过时间戳进行索引 timestamp可以由bigtable设置，也可以由客户端指定 版本按timestamp从大到小排序，版本大的先读取 为了减小版本维护成本，有两种 column-family 维度的 版本回收策略 客户端可以指定只保留最近N个版本 或者自定义一个方法？足够新的数据才保存（比如近7天的版本） API 提供的API Link to heading 略</description>
     </item>
     
     <item>
@@ -59,12 +59,12 @@ Data Model 数据模型    简述     BigTable是一个稀疏、分布式、持�
       
       <guid>http://hechen0.com/posts/grpc-retry-policy/</guid>
       <description>本文首发在 技术成长之道 博客，访问 hechen0.com 查看更多，或者微信搜索「技术成长之道」关注我的公众号，或者扫描下方二维码关注 公众号获得第一时间更新通知！
- 本文让你了解     重试解决什么问题 短时故障的产生原因 处理短时故障的挑战 重试分为几步 gRPC是如何进行重试的  1. 重试解决什么问题    如今的互联网服务早已不是单体应用，而是由若干个模块组成的微服务，每个模块可以进行单独的扩容、缩容，独立上线部署等等；模块与模块之间通过网络进行联通。我们的应用必须对网络错误进行妥善的处理。从发生时长上而言，网络错误可以分为两类：
- 长时间不可用，如光纤被挖断，机房被炸等 短时间不可用，比如网络出现抖动，正在通信的对端机器正好重新上线等  而重试是应对短时故障利器，简单却异常有效。
-2. 短时间故障的产生原因    在任何环节下应用都会有可能产生短时故障。即使是在没有网络参与的应用里，软件bug或硬件故障或一次意外断电都会造成短时故障。短时故障是常态，想做到高可用不是靠避免这些故障的发生，而是去思考短时故障发生之后的应对策略。
+本文让你了解 Link to heading 重试解决什么问题 短时故障的产生原因 处理短时故障的挑战 重试分为几步 gRPC是如何进行重试的 1. 重试解决什么问题 Link to heading 如今的互联网服务早已不是单体应用，而是由若干个模块组成的微服务，每个模块可以进行单独的扩容、缩容，独立上线部署等等；模块与模块之间通过网络进行联通。我们的应用必须对网络错误进行妥善的处理。从发生时长上而言，网络错误可以分为两类：
+长时间不可用，如光纤被挖断，机房被炸等 短时间不可用，比如网络出现抖动，正在通信的对端机器正好重新上线等 而重试是应对短时故障利器，简单却异常有效。
+2. 短时间故障的产生原因 Link to heading 在任何环节下应用都会有可能产生短时故障。即使是在没有网络参与的应用里，软件bug或硬件故障或一次意外断电都会造成短时故障。短时故障是常态，想做到高可用不是靠避免这些故障的发生，而是去思考短时故障发生之后的应对策略。
 就互联网公司的服务而言，通过冗余，各种切换等已经极大提高了整体应用的可用性，但其内部的短时故障却是连绵不断，原因有这么几个：
- 应用所使用的资源是共享的，比如docker、虚拟机、物理机混布等，如果多个虚拟单位(docker镜像、虚拟机、进程等)之间的资源隔离没有做好，就可能产生一个虚拟单位侵占过多资源导致其它共享的虚拟单元出现错误。这些错误可能是短时的，也有可能是长时间的。 现在服务器都是用比较便宜的硬件，即使是最重要的数据库，互联网公司的通常做法也是通过冗余去保证高可用。贵和便宜的硬件之间有个很重要的指标差异就是故障率，便宜的机器更容易发生硬件故障，虽然故障率很低，但如果把这个故障率乘以互联网公司数以万计、十万计的机器，每天都会有机器故障自然是家常便饭。这里有个硬盘故障率统计很有意思可以看看。 除掉本身的问题外，现今的互联网架构所需要的硬件组件也更多了，比如路由和负载均衡等等，更多的组件，意味着通信链路上更多的节点，意味着增加了更多的不可靠。 应用之间的网络通信问题，在架构设计时，对网络的基本假设就是不可靠，我们需要通过额外的机制弥补这种不可靠，有人问了，我的应用就是一个纯内网应用，网络都是内网，也不可靠么？嗯是的，不可靠。  3. 处理短时故障的挑战    短时故障处理以下两点挑战
- 感知。应用需要能够区分不同类型的错误，不同类型的错误对应的错误处理方式是不同的，没有哪种应对手段可以处理所有的错误。比如网络抖动我们简单重试即可，如果网络不可用，对于一个可靠的存储系统，可能就需要经历选主，副本切换等复杂操作才能保证数据的正确性。 处理。如何选择一个合适的处理策略对于快速恢复故障、缩短响应时间以及减少对对端的冲击是非常重要的。  4. 重试分为几步     感知错误。通常我们使用错误码识别不同类型的错误。比如在REST风格的应用里面，HTTP的status code可以用来识别不同类型的错误。 决策是否应该重试。不是所有错误都应该被重试，比如HTTP的4xx的错误，通常4xx表示的是客户端的错误，这时候客户端不应该进行重试操作。什么错误可以重试需要具体情况具体分析，对于网络类的错误，我们也不是一股脑都进行重试，比如zookeeper这种强一致的存储系统，发生了network partition之后，需要经过一系列复杂操作，简单的重试根本不管用。 选择重试策略。选择一个合适的重试次数和重试间隔非常的重要。如果次数不够，可能并不能有效的覆盖这个短时间故障的时间段，如果重试次数过多，或者重试间隔太小，又可能造成大量的资源(CPU、内存、线程、网络)浪费。合适的次数和间隔取决于重试的上下文。举例：如果是用户操作失败导致的重试，比如在网页上点了一个按钮失败的重试，间隔就应该尽量短，确保用户等待时间较短；如果请求失败成本很高，比如整个流程很长，一旦中间环节出错需要重头开始，典型的如转账交易，这种情况就需要适当增加重试次数和最长等待时间以尽可能保证短时间的故障能被处理而无需重头来过。 失败处理与自动恢复。短时故障如果短时间没有恢复就变成了长时间的故障，这个时候我们就不应该再进行重试了，但是等故障修复之后我们也需要有一种机制能自动恢复。  4.1 常见的重试时间间隔策略     指数避退。重试间隔时间按照指数增长，如等 3s 9s 27s后重试。指数避退能有效防止对对端造成不必要的冲击，因为随着时间的增加，一个故障从短时故障变成长时间的故障的可能性是逐步增加的，对于一个长时间的故障，重试基本无效。 重试间隔线性增加。重试间隔的间隔按照线性增长，而非指数级增长，如等 3s 7s 13s后重试。间隔增长能避免长时间等待，缩短故障响应时间。 固定间隔。重试间隔是一个固定值，如每3s后进行重试。 立即重试。有时候短时故障是因为网络抖动造成的，可能是因为网络包冲突或者硬件有问题等，这时候我们立即重试通常能解决这类问题。但是立即重试不应该超过一次，如果立即重试一次失败之后，应该转换为指数避退或者其它策略进行，因为大量的立即重试会给对端造成流量上的尖峰，对网络也是一个冲击。 随机间隔。当服务有多台实例时，我们应该加入随机的变量，比如A服务请求B服务，B服务发生短时间不可用，A服务的实例应该避免在同一时刻进行重试，这时候我们对间隔加入随机因子会很好的在时间上平摊开所有的重试请求。  5.</description>
+应用所使用的资源是共享的，比如docker、虚拟机、物理机混布等，如果多个虚拟单位(docker镜像、虚拟机、进程等)之间的资源隔离没有做好，就可能产生一个虚拟单位侵占过多资源导致其它共享的虚拟单元出现错误。这些错误可能是短时的，也有可能是长时间的。 现在服务器都是用比较便宜的硬件，即使是最重要的数据库，互联网公司的通常做法也是通过冗余去保证高可用。贵和便宜的硬件之间有个很重要的指标差异就是故障率，便宜的机器更容易发生硬件故障，虽然故障率很低，但如果把这个故障率乘以互联网公司数以万计、十万计的机器，每天都会有机器故障自然是家常便饭。这里有个硬盘故障率统计很有意思可以看看。 除掉本身的问题外，现今的互联网架构所需要的硬件组件也更多了，比如路由和负载均衡等等，更多的组件，意味着通信链路上更多的节点，意味着增加了更多的不可靠。 应用之间的网络通信问题，在架构设计时，对网络的基本假设就是不可靠，我们需要通过额外的机制弥补这种不可靠，有人问了，我的应用就是一个纯内网应用，网络都是内网，也不可靠么？嗯是的，不可靠。 3. 处理短时故障的挑战 Link to heading 短时故障处理以下两点挑战
+感知。应用需要能够区分不同类型的错误，不同类型的错误对应的错误处理方式是不同的，没有哪种应对手段可以处理所有的错误。比如网络抖动我们简单重试即可，如果网络不可用，对于一个可靠的存储系统，可能就需要经历选主，副本切换等复杂操作才能保证数据的正确性。 处理。如何选择一个合适的处理策略对于快速恢复故障、缩短响应时间以及减少对对端的冲击是非常重要的。 4. 重试分为几步 Link to heading 感知错误。通常我们使用错误码识别不同类型的错误。比如在REST风格的应用里面，HTTP的status code可以用来识别不同类型的错误。 决策是否应该重试。不是所有错误都应该被重试，比如HTTP的4xx的错误，通常4xx表示的是客户端的错误，这时候客户端不应该进行重试操作。什么错误可以重试需要具体情况具体分析，对于网络类的错误，我们也不是一股脑都进行重试，比如zookeeper这种强一致的存储系统，发生了network partition之后，需要经过一系列复杂操作，简单的重试根本不管用。 选择重试策略。选择一个合适的重试次数和重试间隔非常的重要。如果次数不够，可能并不能有效的覆盖这个短时间故障的时间段，如果重试次数过多，或者重试间隔太小，又可能造成大量的资源(CPU、内存、线程、网络)浪费。合适的次数和间隔取决于重试的上下文。举例：如果是用户操作失败导致的重试，比如在网页上点了一个按钮失败的重试，间隔就应该尽量短，确保用户等待时间较短；如果请求失败成本很高，比如整个流程很长，一旦中间环节出错需要重头开始，典型的如转账交易，这种情况就需要适当增加重试次数和最长等待时间以尽可能保证短时间的故障能被处理而无需重头来过。 失败处理与自动恢复。短时故障如果短时间没有恢复就变成了长时间的故障，这个时候我们就不应该再进行重试了，但是等故障修复之后我们也需要有一种机制能自动恢复。 4.1 常见的重试时间间隔策略 Link to heading 指数避退。重试间隔时间按照指数增长，如等 3s 9s 27s后重试。指数避退能有效防止对对端造成不必要的冲击，因为随着时间的增加，一个故障从短时故障变成长时间的故障的可能性是逐步增加的，对于一个长时间的故障，重试基本无效。 重试间隔线性增加。重试间隔的间隔按照线性增长，而非指数级增长，如等 3s 7s 13s后重试。间隔增长能避免长时间等待，缩短故障响应时间。 固定间隔。重试间隔是一个固定值，如每3s后进行重试。 立即重试。有时候短时故障是因为网络抖动造成的，可能是因为网络包冲突或者硬件有问题等，这时候我们立即重试通常能解决这类问题。但是立即重试不应该超过一次，如果立即重试一次失败之后，应该转换为指数避退或者其它策略进行，因为大量的立即重试会给对端造成流量上的尖峰，对网络也是一个冲击。 随机间隔。当服务有多台实例时，我们应该加入随机的变量，比如A服务请求B服务，B服务发生短时间不可用，A服务的实例应该避免在同一时刻进行重试，这时候我们对间隔加入随机因子会很好的在时间上平摊开所有的重试请求。 5.</description>
     </item>
     
     <item>
@@ -74,17 +74,18 @@ Data Model 数据模型    简述     BigTable是一个稀疏、分布式、持�
       
       <guid>http://hechen0.com/posts/io-multiplexing/</guid>
       <description>本文首发在 技术成长之道 博客，访问 hechen0.com 查看更多，或者微信搜索「技术成长之道」关注我的公众号，或者扫描下方二维码关注公众号获得第一时间更新通知！
- 本文让你理解     什么是IO多路复用 IO多路复用解决什么问题 目前有哪些IO多路复用的方案 具体怎么用 不同IO多路复用方案优缺点  1. 什么是IO多路复用    一句话解释：单线程或单进程同时监测若干个文件描述符是否可以执行IO操作的能力。
-2. 解决什么问题    说在前头    应用程序通常需要处理来自多条事件流中的事件，比如我现在用的电脑，需要同时处理键盘鼠标的输入、中断信号等等事件，再比如web服务器如nginx，需要同时处理来来自N个客户端的事件。
- 逻辑控制流在时间上的重叠叫做 并发
- 而CPU单核在同一时刻只能做一件事情，一种解决办法是对CPU进行时分复用(多个事件流将CPU切割成多个时间片，不同事件流的时间片交替进行)。在计算机系统中，我们用线程或者进程来表示一条执行流，通过不同的线程或进程在操作系统内部的调度，来做到对CPU处理的时分复用。这样多个事件流就可以并发进行，不需要一个等待另一个太久，在用户看起来他们似乎就是并行在做一样。
+本文让你理解 Link to heading 什么是IO多路复用 IO多路复用解决什么问题 目前有哪些IO多路复用的方案 具体怎么用 不同IO多路复用方案优缺点 1. 什么是IO多路复用 Link to heading 一句话解释：单线程或单进程同时监测若干个文件描述符是否可以执行IO操作的能力。
+2. 解决什么问题 Link to heading 说在前头 Link to heading 应用程序通常需要处理来自多条事件流中的事件，比如我现在用的电脑，需要同时处理键盘鼠标的输入、中断信号等等事件，再比如web服务器如nginx，需要同时处理来来自N个客户端的事件。
+逻辑控制流在时间上的重叠叫做 并发
+而CPU单核在同一时刻只能做一件事情，一种解决办法是对CPU进行时分复用(多个事件流将CPU切割成多个时间片，不同事件流的时间片交替进行)。在计算机系统中，我们用线程或者进程来表示一条执行流，通过不同的线程或进程在操作系统内部的调度，来做到对CPU处理的时分复用。这样多个事件流就可以并发进行，不需要一个等待另一个太久，在用户看起来他们似乎就是并行在做一样。
 但凡事都是有成本的。线程/进程也一样，有这么几个方面：
- 线程/进程创建成本 CPU切换不同线程/进程成本 Context Switch 多线程的资源竞争  有没有一种可以在单线程/进程中处理多个事件流的方法呢？一种答案就是IO多路复用。
+线程/进程创建成本 CPU切换不同线程/进程成本 Context Switch 多线程的资源竞争 有没有一种可以在单线程/进程中处理多个事件流的方法呢？一种答案就是IO多路复用。
 因此IO多路复用解决的本质问题是在用更少的资源完成更多的事。
 为了更全面的理解，先介绍下在Linux系统下所有IO模型。
-I/O模型    目前Linux系统中提供了5种IO处理模型
- 阻塞IO 非阻塞IO IO多路复用 信号驱动IO 异步IO  阻塞IO    这是最常用的简单的IO模型。阻塞IO意味着当我们发起一次IO操作后一直等待成功或失败之后才返回，在这期间程序不能做其它的事情。阻塞IO操作只能对单个文件描述符进行操作，详见read或write。
-非阻塞IO    我们在发起IO时，通过对文件描述符设置O_NONBLOCK flag来指定该文件描述符的IO操作为非阻塞。非阻塞IO通常发生在一个for循环当中，因为每次进行IO操作时要么IO操作成功，要么当IO操作会阻塞时返回错误EWOULDBLOCK/EAGAIN，然后再根据需要进行下一次的for循环操作，这种类似轮询的方式会浪费很多不必要的CPU资源，是一种糟糕的设计。和阻塞IO一样，非阻塞IO也是通过调用read或writewrite来进行操作的，也只能对单个描述符进行操作。</description>
+I/O模型 Link to heading 目前Linux系统中提供了5种IO处理模型
+阻塞IO 非阻塞IO IO多路复用 信号驱动IO 异步IO 阻塞IO Link to heading 这是最常用的简单的IO模型。阻塞IO意味着当我们发起一次IO操作后一直等待成功或失败之后才返回，在这期间程序不能做其它的事情。阻塞IO操作只能对单个文件描述符进行操作，详见read或write。
+非阻塞IO Link to heading 我们在发起IO时，通过对文件描述符设置O_NONBLOCK flag来指定该文件描述符的IO操作为非阻塞。非阻塞IO通常发生在一个for循环当中，因为每次进行IO操作时要么IO操作成功，要么当IO操作会阻塞时返回错误EWOULDBLOCK/EAGAIN，然后再根据需要进行下一次的for循环操作，这种类似轮询的方式会浪费很多不必要的CPU资源，是一种糟糕的设计。和阻塞IO一样，非阻塞IO也是通过调用read或writewrite来进行操作的，也只能对单个描述符进行操作。
+IO多路复用 Link to heading IO多路复用在Linux下包括了三种，select、poll、epoll，抽象来看，他们功能是类似的，但具体细节各有不同：首先都会对一组文件描述符进行相关事件的注册，然后阻塞等待某些事件的发生或等待超时。更多细节详见下面的 &amp;ldquo;具体怎么用&amp;rdquo;。IO多路复用都可以关注多个文件描述符，但对于这三种机制而言，不同数量级文件描述符对性能的影响是不同的，下面会详细介绍。</description>
     </item>
     
     <item>
@@ -96,8 +97,8 @@ I/O模型    目前Linux系统中提供了5种IO处理模型
       <description>在一个分布式系统中，故障是无法避免的。网络故障、光纤被挖断、人为配置错误等等都可能导致系统出现异常，在这种情况下我们需要做好应对措施。
 如何对待故障和可用性要求有关。举个例子，在发生区域地震导致某个数据中心不可用时，一个高可用系统需要自动切换到另外一个数据中心，这就是通常所说的『异地多活』架构，这样做的成本很高，所以可用性要求背后其实是『收益&amp;amp;成本』权衡。上面说所举例子是一个非常小概率的事件，除此之外系统中一些经常发生的小故障，如网络抖动、数据库连接不可用等等故障其实是更常见的，下面提供的策略可以更好的应对这些常见故障。
 面对故障通常有三板斧。
- 故障感知 优雅的故障处理 日志和实时监测，以供问题的排查和修复  以下是一些具体设计原则。
- 重试。重试是非常有效的策略。系统时常需要引入外部依赖，外部依赖因为诸多因素而影响其可靠性，如代码质量、网络等；对于外部依赖，要用『防御式编程』来对待，假定依赖是不可靠的，当错误发生后首要策略就是重试。很多服务SDK内部已经包含重试逻辑，对于调用一个REST api接口，我们可以用自带重试逻辑的HTTP Client访问。 断路器。就像电路里保险丝一样，当电流异常升高到一定高度和热度时，自身熔断切断电流，保证电路安全运行。在设计系统时也可以借鉴这个思想，以保障我们系统安全。当故障是暂时的，重试可以很好解决系统的弹性问题，当故障持续，我们需要通过断路器来停止对故障组件的调用，避免系统资源耗尽以及下游服务雪崩。 关键系统隔离。当一个系统故障时，通常会引发异常，如线程和socket不能及时回收，导致内存被耗尽，因此我们需要将关键服务和其它服务分开部署以达到故障隔离。举个例子，由于A服务数据库和B服务数据库混布在一个物理机上，在某个业务高峰期，A服务数据库占用了大量CPU、内存等系统资源，导致B服务出现数据库连接异常进而导致B服务不可用，而B服务是关键业务系统，后续将B服务数据库单独部署来避免该问题。 队列异步化。系统在业务高峰时会遇到突发流量高峰，而这种高峰有时会超过系统处理能力。为避免该问题，我们可以在系统内部引入队列，将处理异步化，到达削峰的效果。 故障转移。当一个实例不可达，需要将请求转移到其它实例上。对于一些无状态服务，比如web服务器，可以在一个负载均衡后接入多个实例。对于有状态服务，比如数据库，需要使用副本和自动故障转移。如redis中master-slave+sentinel就是对于有状态服务进行故障转移的一种方式。对于有状态服务，如何在故障转移的同时保证一致性值得进一步探讨。 服务降级。有时候故障无法转移，我们可以提供一个有损服务，但不影响核心功能。如一个标签查询服务，假如服务不可用，可以返回一组默认标签提供优雅降级。 容量规划。我们需要知道硬件资源是否满足现有流量，可以通过定期评估、重大活动提前评估等方式进行，对于日常使用需要有一个合理冗余如 30%CPU空闲，不应该满负载运行系统。 使用方限流、屏蔽。你永远不知道用户会怎么调用系统，所以需要给使用方调用频率加一个上限，避免小部分用户异常行为引发整体系统异常。屏蔽和限流一个道理，但是对滥用系统更严厉的惩罚。 测试时需要考虑异常输入。通常来说，正常输入总是经过完善测试，但是对于异常输入却没有测试到位。关于这一点，可以看看c标准库中atoi这个函数是如何考虑异常输入情况。这里有一个笑话可以供你体会。 混沌工程(Chaos Engineering)。chaos是对系统的终极考验，通过主动引入一些平时极少概率发生的故障，从而提前发现系统潜在问题。  以上十条面向故障的系统设计原则，希望能对你有启发。</description>
+故障感知 优雅的故障处理 日志和实时监测，以供问题的排查和修复 以下是一些具体设计原则。
+重试。重试是非常有效的策略。系统时常需要引入外部依赖，外部依赖因为诸多因素而影响其可靠性，如代码质量、网络等；对于外部依赖，要用『防御式编程』来对待，假定依赖是不可靠的，当错误发生后首要策略就是重试。很多服务SDK内部已经包含重试逻辑，对于调用一个REST api接口，我们可以用自带重试逻辑的HTTP Client访问。 断路器。就像电路里保险丝一样，当电流异常升高到一定高度和热度时，自身熔断切断电流，保证电路安全运行。在设计系统时也可以借鉴这个思想，以保障我们系统安全。当故障是暂时的，重试可以很好解决系统的弹性问题，当故障持续，我们需要通过断路器来停止对故障组件的调用，避免系统资源耗尽以及下游服务雪崩。 关键系统隔离。当一个系统故障时，通常会引发异常，如线程和socket不能及时回收，导致内存被耗尽，因此我们需要将关键服务和其它服务分开部署以达到故障隔离。举个例子，由于A服务数据库和B服务数据库混布在一个物理机上，在某个业务高峰期，A服务数据库占用了大量CPU、内存等系统资源，导致B服务出现数据库连接异常进而导致B服务不可用，而B服务是关键业务系统，后续将B服务数据库单独部署来避免该问题。 队列异步化。系统在业务高峰时会遇到突发流量高峰，而这种高峰有时会超过系统处理能力。为避免该问题，我们可以在系统内部引入队列，将处理异步化，到达削峰的效果。 故障转移。当一个实例不可达，需要将请求转移到其它实例上。对于一些无状态服务，比如web服务器，可以在一个负载均衡后接入多个实例。对于有状态服务，比如数据库，需要使用副本和自动故障转移。如redis中master-slave+sentinel就是对于有状态服务进行故障转移的一种方式。对于有状态服务，如何在故障转移的同时保证一致性值得进一步探讨。 服务降级。有时候故障无法转移，我们可以提供一个有损服务，但不影响核心功能。如一个标签查询服务，假如服务不可用，可以返回一组默认标签提供优雅降级。 容量规划。我们需要知道硬件资源是否满足现有流量，可以通过定期评估、重大活动提前评估等方式进行，对于日常使用需要有一个合理冗余如 30%CPU空闲，不应该满负载运行系统。 使用方限流、屏蔽。你永远不知道用户会怎么调用系统，所以需要给使用方调用频率加一个上限，避免小部分用户异常行为引发整体系统异常。屏蔽和限流一个道理，但是对滥用系统更严厉的惩罚。 测试时需要考虑异常输入。通常来说，正常输入总是经过完善测试，但是对于异常输入却没有测试到位。关于这一点，可以看看c标准库中atoi这个函数是如何考虑异常输入情况。这里有一个笑话可以供你体会。 混沌工程(Chaos Engineering)。chaos是对系统的终极考验，通过主动引入一些平时极少概率发生的故障，从而提前发现系统潜在问题。 以上十条面向故障的系统设计原则，希望能对你有启发。</description>
     </item>
     
     <item>
@@ -106,18 +107,18 @@ I/O模型    目前Linux系统中提供了5种IO处理模型
       <pubDate>Sun, 15 Apr 2018 10:19:05 +0800</pubDate>
       
       <guid>http://hechen0.com/posts/redis-pagination/</guid>
-      <description>问题    分页是web应用中非常常见的需求，分页结果来自数据库查询，如何对这个分页结果使用Redis进行缓存呢？
+      <description>问题 Link to heading 分页是web应用中非常常见的需求，分页结果来自数据库查询，如何对这个分页结果使用Redis进行缓存呢？
 下面我说说常见的几种方案，并简单说说各自优劣。
-方案一    最简单的方式是按照sql作为缓存key(如将语句 &amp;ldquo;select * from comments limit 10 offset 0&amp;rdquo; md5)，结果作为value，如果同样的sql查询发生了，我们就可以命中缓存
+方案一 Link to heading 最简单的方式是按照sql作为缓存key(如将语句 &amp;ldquo;select * from comments limit 10 offset 0&amp;rdquo; md5)，结果作为value，如果同样的sql查询发生了，我们就可以命中缓存
 pro:
- 实现简单  con:
- 缓存的数据极有可能存在冗余，如条件&amp;quot;limit 10 offset 0&amp;quot;和&amp;quot;limit 10 offset 5&amp;quot;，重复的数据存储在不同的redis key中 只要查询的sql变化，就不会命中缓存 缓存一致性很难保证，如果更新了数据或者添加了新的记录，有的缓存会失效，但很难直接知道哪个key失效了(如总共100条记录，更新了第50条记录，难以知道哪次sql查询缓存了第50条记录)，最简单的做法就是将所有的满足pattern的key清空，比如上述的key可以加上前缀 sql_cache:6f7cb75b5cfe12ca1f51647b0f440251 使用 keys sql_cache:* 找出所有的key，然后清空。  在分页这种场景下，使用最常用的缓存方式有很多问题，所以还是不考虑这种方式。
-方案二    redis的list配合hash也可以满足分页需求，将一类记录(如一篇博文下的所有评论id)按照需要的顺序PUSH到一个key下(如blog:2)，将评论的内容放到hash中，使用LRANGE blog:2:comments 0 10，可以做到对查询直接进行分页，使用HMGET获取评论的具体内容
+实现简单 con:
+缓存的数据极有可能存在冗余，如条件&amp;quot;limit 10 offset 0&amp;quot;和&amp;quot;limit 10 offset 5&amp;quot;，重复的数据存储在不同的redis key中 只要查询的sql变化，就不会命中缓存 缓存一致性很难保证，如果更新了数据或者添加了新的记录，有的缓存会失效，但很难直接知道哪个key失效了(如总共100条记录，更新了第50条记录，难以知道哪次sql查询缓存了第50条记录)，最简单的做法就是将所有的满足pattern的key清空，比如上述的key可以加上前缀 sql_cache:6f7cb75b5cfe12ca1f51647b0f440251 使用 keys sql_cache:* 找出所有的key，然后清空。 在分页这种场景下，使用最常用的缓存方式有很多问题，所以还是不考虑这种方式。
+方案二 Link to heading redis的list配合hash也可以满足分页需求，将一类记录(如一篇博文下的所有评论id)按照需要的顺序PUSH到一个key下(如blog:2)，将评论的内容放到hash中，使用LRANGE blog:2:comments 0 10，可以做到对查询直接进行分页，使用HMGET获取评论的具体内容
 pro:
- 缓存的数据不存在冗余 支持元素更新，可以hset来更新某一个元素  con:
- 只适用于分页顺序不会发生变化的，一旦需要更改元素之间的顺序，需要重新生成整个list 因为只有一个key，所以在并发写的情况下，LIST中的顺序和数据库中的顺序可能不一样，不太适合频繁写的场景  方案三    redis的zset配合hash是第三种方案。排序权重就是zset中的score值，比如可以用时间戳作为元素的score，分页使用ZRANGEBYSCORE命令，配合上zrangebyscore支持的limit offset，取具体的数据还是使用hash。
+缓存的数据不存在冗余 支持元素更新，可以hset来更新某一个元素 con:
+只适用于分页顺序不会发生变化的，一旦需要更改元素之间的顺序，需要重新生成整个list 因为只有一个key，所以在并发写的情况下，LIST中的顺序和数据库中的顺序可能不一样，不太适合频繁写的场景 方案三 Link to heading redis的zset配合hash是第三种方案。排序权重就是zset中的score值，比如可以用时间戳作为元素的score，分页使用ZRANGEBYSCORE命令，配合上zrangebyscore支持的limit offset，取具体的数据还是使用hash。
 pro: 前两条和方案二的相同，外加解决了方案二的两个缺陷。
- 支持对元素顺序的更改，如果是按照更新时间戳排序，可以使用zadd改变某个元素的score值 即使在并发写的情况，由于元素的顺序只和score值有关，所以并不会出现顺序不一致的情况  方案四    set/list、hash配合sort命令，redis提供的sort命令可以直接对hash的属性进行排序 sort命令本身也支持limit offset参数。</description>
+支持对元素顺序的更改，如果是按照更新时间戳排序，可以使用zadd改变某个元素的score值 即使在并发写的情况，由于元素的顺序只和score值有关，所以并不会出现顺序不一致的情况 方案四 Link to heading set/list、hash配合sort命令，redis提供的sort命令可以直接对hash的属性进行排序 sort命令本身也支持limit offset参数。</description>
     </item>
     
     <item>
@@ -126,12 +127,14 @@ pro: 前两条和方案二的相同，外加解决了方案二的两个缺陷。
       <pubDate>Thu, 12 Apr 2018 20:47:04 +0800</pubDate>
       
       <guid>http://hechen0.com/posts/struct-tag-golang/</guid>
-      <description>struct tag简介    在Go语言中我们通常使用struct来的表示复杂的数据结构，比如二维平面上的一个点，可以用下面的struct表示
-1 2 3 4 5  type Point struct { X int64 Y int64 }   struct提供的功能不仅限于此，下面介绍下struct中的tag。
+      <description>struct tag简介 Link to heading 在Go语言中我们通常使用struct来的表示复杂的数据结构，比如二维平面上的一个点，可以用下面的struct表示
+1 2 3 4 type Point struct { X int64 Y int64 } struct提供的功能不仅限于此，下面介绍下struct中的tag。
 我们可以在struct中的每一个field后面添加一段额外的注释或者说明，来引导struct的encoding到某种格式中，这部分额外的注释说明，我们称之为struct中的field tag，比如:
-1 2 3 4 5 6  type Person struct { FirstName string `json:&amp;#34;first_name&amp;#34;` LastName string `json:&amp;#34;last_name&amp;#34;` MiddleName string `json:&amp;#34;middle_name,omitempty&amp;#34;` }   这里我们定义了一个名为Person的struct，使用tag来指定encoding到json后，各个field在json中的key名称，在最后一个field tag中，我们额外添加了额外的omitempty选项，指示在encoding成json时，如果MiddleName==&amp;quot;&amp;quot;，那么encoding成json的时候忽略它。如:
-1 2  p = Person{FirstName: &amp;#34;chen&amp;#34;, LastName:&amp;#34;he&amp;#34;}   对应的encoding后的json就是
-1 2 3 4 5  { &amp;#34;first_name&amp;#34;:&amp;#34;chen&amp;#34;, &amp;#34;last_name&amp;#34;:&amp;#34;he&amp;#34; }   关于更多格式的tag选项见本文末尾</description>
+1 2 3 4 5 type Person struct { FirstName string `json:&amp;#34;first_name&amp;#34;` LastName string `json:&amp;#34;last_name&amp;#34;` MiddleName string `json:&amp;#34;middle_name,omitempty&amp;#34;` } 这里我们定义了一个名为Person的struct，使用tag来指定encoding到json后，各个field在json中的key名称，在最后一个field tag中，我们额外添加了额外的omitempty选项，指示在encoding成json时，如果MiddleName==&amp;quot;&amp;quot;，那么encoding成json的时候忽略它。如:
+1 p = Person{FirstName: &amp;#34;chen&amp;#34;, LastName:&amp;#34;he&amp;#34;} 对应的encoding后的json就是
+1 2 3 4 { &amp;#34;first_name&amp;#34;:&amp;#34;chen&amp;#34;, &amp;#34;last_name&amp;#34;:&amp;#34;he&amp;#34; } 关于更多格式的tag选项见本文末尾
+struct tag的解析 Link to heading 在Go语言中field tag是用 reflect.StructTag 这个结构表示的，reflect.StructTag对应于一个string
+1 2 package reflect type StructTag string 这个string的按照惯例是由多个 key:&amp;ldquo;value&amp;rdquo; 连接而成，每一组 key:&amp;ldquo;value&amp;quot;都代表一种encoding格式，例如:</description>
     </item>
     
     <item>
